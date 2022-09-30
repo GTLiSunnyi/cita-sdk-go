@@ -1,0 +1,63 @@
+// Copyright Rivtower Technologies LLC.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+import "protos/common.proto";
+
+package network;
+
+option go_package = "./protos/proto";
+
+message NetworkStatusResponse {
+    uint64 peer_count = 1;
+}
+
+message NetworkMsg {
+    string module = 1;
+    string type = 2;
+    uint64 origin = 3;
+    bytes msg = 4;
+}
+
+message RegisterInfo {
+    string module_name = 1;
+    string hostname = 2;
+    string port = 3;
+}
+
+service NetworkService {
+    // send message to a single peer.
+    rpc SendMsg(NetworkMsg) returns (common.StatusCode);
+
+    // broadcast message to all peers.
+    rpc Broadcast(NetworkMsg) returns (common.StatusCode);
+
+    rpc GetNetworkStatus(common.Empty) returns (NetworkStatusResponse);
+
+    // modules which need network register its msg handler.
+    // args: module name; hostname and port of handler
+    rpc RegisterNetworkMsgHandler(RegisterInfo) returns (common.StatusCode);
+
+    // add new node
+    rpc AddNode(common.NodeNetInfo) returns (common.StatusCode);
+
+    // get peers net info
+    rpc GetPeersNetInfo(common.Empty) returns (common.TotalNodeNetInfo);
+}
+
+// modules which need network must implement this service
+service NetworkMsgHandlerService {
+    rpc ProcessNetworkMsg(NetworkMsg) returns (common.StatusCode);
+}

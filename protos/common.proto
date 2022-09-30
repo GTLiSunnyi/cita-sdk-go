@@ -1,0 +1,108 @@
+// Copyright Rivtower Technologies LLC.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+import "protos/blockchain.proto";
+
+package common;
+
+option go_package = "./protos/proto";
+
+message Empty {}
+
+message Hash {
+    bytes hash = 1;
+}
+
+message StateRoot {
+    bytes state_root = 1;
+}
+
+message Proof {
+    bytes proof = 1;
+}
+
+message Hashes {
+    repeated Hash hashes = 1;
+}
+
+message Address {
+    bytes address = 1;
+}
+
+message Proposal {
+    uint64 height = 1;
+    bytes data = 2;
+}
+
+message ProposalWithProof {
+    Proposal proposal = 1;
+    bytes proof = 2;
+}
+
+message BFTProposal {
+    bytes pre_state_root = 1;
+    bytes pre_proof = 2;
+    blockchain.Block proposal = 3;
+}
+
+message ProposalEnum {
+    oneof proposal {
+        BFTProposal bft_proposal = 1;
+    }
+}
+
+message ConsensusConfiguration {
+    uint64 height = 1;
+    uint32 block_interval = 2;
+    repeated bytes validators = 3;
+}
+
+message StatusCode {
+    uint32 code = 1;
+}
+
+message HashResponse {
+    StatusCode status = 1;
+    Hash hash = 2;
+}
+
+message ProposalResponse {
+    StatusCode status = 1;
+    Proposal proposal = 2;
+}
+
+message ConsensusConfigurationResponse {
+    StatusCode status = 1;
+    ConsensusConfiguration config = 2;
+}
+
+message NodeNetInfo {
+    string multi_address = 1;
+    uint64 origin = 2;
+}
+
+message TotalNodeNetInfo {
+    repeated NodeNetInfo nodes = 1;
+}
+
+message NodeInfo {
+    bytes address = 1;
+    NodeNetInfo net_info = 2;
+}
+
+message TotalNodeInfo {
+    repeated NodeInfo nodes = 1;
+}
