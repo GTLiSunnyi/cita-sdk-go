@@ -1,6 +1,9 @@
 package executor
 
-import "google.golang.org/grpc"
+import (
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+)
 
 type executorClient struct {
 	client *grpc.ClientConn
@@ -8,7 +11,7 @@ type executorClient struct {
 
 func NewClient(executor_addr string) (Client, error) {
 	dialOpts := []grpc.DialOption{
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	}
 	client, err := grpc.Dial(executor_addr, dialOpts...)
 	if err != nil {

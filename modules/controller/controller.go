@@ -10,11 +10,12 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/status"
 
+	"github.com/GTLiSunnyi/cita-sdk-go/crypto/types"
 	"github.com/GTLiSunnyi/cita-sdk-go/protos/proto"
-	"github.com/GTLiSunnyi/cita-sdk-go/types"
-	"github.com/GTLiSunnyi/cita-sdk-go/types/store"
+	sdk "github.com/GTLiSunnyi/cita-sdk-go/types"
 	"github.com/GTLiSunnyi/cita-sdk-go/utils"
 )
 
@@ -24,7 +25,7 @@ type controllerClient struct {
 
 func NewClient(controller_addr string) (Client, error) {
 	dialOpts := []grpc.DialOption{
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	}
 	client, err := grpc.Dial(controller_addr, dialOpts...)
 	if err != nil {
@@ -37,13 +38,14 @@ func NewClient(controller_addr string) (Client, error) {
 }
 
 // 获取区块高度
+// if set for_padding, get block number of the pending block
 func (controller controllerClient) GetBlockNumber(for_padding bool) (uint64, error) {
 	flag := &proto.Flag{Flag: for_padding}
 
 	gRpcClient := proto.NewRPCServiceClient(controller.client)
 
 	// 设置 grpc 超时时间
-	clientDeadline := time.Now().Add(types.GRPC_TIMEOUT)
+	clientDeadline := time.Now().Add(sdk.GRPC_TIMEOUT)
 	ctx, cancel := context.WithDeadline(context.Background(), clientDeadline)
 	defer cancel()
 
@@ -68,7 +70,7 @@ func (controller controllerClient) GetSystemConfig() (*proto.SystemConfig, error
 	gRpcClient := proto.NewRPCServiceClient(controller.client)
 
 	// 设置 grpc 超时时间
-	clientDeadline := time.Now().Add(types.GRPC_TIMEOUT)
+	clientDeadline := time.Now().Add(sdk.GRPC_TIMEOUT)
 	ctx, cancel := context.WithDeadline(context.Background(), clientDeadline)
 	defer cancel()
 
@@ -89,7 +91,7 @@ func (controller controllerClient) GetSystemConfig() (*proto.SystemConfig, error
 }
 
 // 发送交易
-func (controller controllerClient) SendTx(keyInfo store.KeyInfo, req SendRequest) error {
+func (controller controllerClient) SendTx(keypair types.KeyPair, req SendRequest) error {
 	to, err := utils.ParseData(req.To)
 	if err != nil {
 		return err
@@ -126,13 +128,13 @@ func (controller controllerClient) SendTx(keyInfo store.KeyInfo, req SendRequest
 		ChainId:         systemConfig.ChainId,
 	}
 
-	controller.SendRawTx(rawTx, keyInfo)
+	controller.SendRawTx(rawTx, keypair)
 
 	return nil
 }
 
-func (controller controllerClient) SendRawTx(rawTx proto.Transaction, keyInfo store.KeyInfo) error {
-	// keyInfo.PrivateKey.
+func (controller controllerClient) SendRawTx(rawTx proto.Transaction, keypair types.KeyPair) error {
+	// keypair.Sign()
 	return nil
 }
 
