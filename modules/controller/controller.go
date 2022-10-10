@@ -15,7 +15,7 @@ import (
 
 	"github.com/GTLiSunnyi/cita-sdk-go/crypto/types"
 	"github.com/GTLiSunnyi/cita-sdk-go/protos/proto"
-	sdk "github.com/GTLiSunnyi/cita-sdk-go/types"
+	sdktype "github.com/GTLiSunnyi/cita-sdk-go/types"
 	"github.com/GTLiSunnyi/cita-sdk-go/utils"
 )
 
@@ -27,6 +27,7 @@ func NewClient(controller_addr string) (Client, error) {
 	dialOpts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	}
+
 	client, err := grpc.Dial(controller_addr, dialOpts...)
 	if err != nil {
 		return nil, err
@@ -39,17 +40,20 @@ func NewClient(controller_addr string) (Client, error) {
 
 // 获取区块高度
 // if set for_padding, get block number of the pending block
-func (controller controllerClient) GetBlockNumber(for_padding bool) (uint64, error) {
+func (controller controllerClient) GetBlockNumber(for_padding bool, authorization, chain_code string) (uint64, error) {
 	flag := &proto.Flag{Flag: for_padding}
 
 	gRpcClient := proto.NewRPCServiceClient(controller.client)
 
+	// 设置请求头
+	ctx := utils.MakeCtxWithHeader(authorization, chain_code)
+
 	// 设置 grpc 超时时间
-	clientDeadline := time.Now().Add(sdk.GRPC_TIMEOUT)
-	ctx, cancel := context.WithDeadline(context.Background(), clientDeadline)
+	clientDeadline := time.Now().Add(sdktype.GRPC_TIMEOUT)
+	ctxH, cancel := context.WithDeadline(ctx, clientDeadline)
 	defer cancel()
 
-	callRes, err := gRpcClient.GetBlockNumber(ctx, flag)
+	callRes, err := gRpcClient.GetBlockNumber(ctxH, flag)
 	if err != nil {
 		//获取错误状态
 		statu, ok := status.FromError(err)
@@ -66,15 +70,18 @@ func (controller controllerClient) GetBlockNumber(for_padding bool) (uint64, err
 }
 
 // 获取系统配置
-func (controller controllerClient) GetSystemConfig() (*proto.SystemConfig, error) {
+func (controller controllerClient) GetSystemConfig(authorization, chain_code string) (*proto.SystemConfig, error) {
 	gRpcClient := proto.NewRPCServiceClient(controller.client)
 
+	// 设置请求头
+	ctx := utils.MakeCtxWithHeader(authorization, chain_code)
+
 	// 设置 grpc 超时时间
-	clientDeadline := time.Now().Add(sdk.GRPC_TIMEOUT)
-	ctx, cancel := context.WithDeadline(context.Background(), clientDeadline)
+	clientDeadline := time.Now().Add(sdktype.GRPC_TIMEOUT)
+	ctxH, cancel := context.WithDeadline(ctx, clientDeadline)
 	defer cancel()
 
-	callRes, err := gRpcClient.GetSystemConfig(ctx, &proto.Empty{})
+	callRes, err := gRpcClient.GetSystemConfig(ctxH, &proto.Empty{})
 	if err != nil {
 		//获取错误状态
 		statu, ok := status.FromError(err)
@@ -91,7 +98,7 @@ func (controller controllerClient) GetSystemConfig() (*proto.SystemConfig, error
 }
 
 // 发送交易
-func (controller controllerClient) SendTx(keypair types.KeyPair, req SendRequest) error {
+func (controller controllerClient) SendTx(keypair types.KeyPair, req SendRequest, authorization, chain_code string) error {
 	to, err := utils.ParseData(req.To)
 	if err != nil {
 		return err
@@ -104,12 +111,12 @@ func (controller controllerClient) SendTx(keypair types.KeyPair, req SendRequest
 	if err != nil {
 		return err
 	}
-	validUntilBlock, err := controller.getValidUntilBlock(req.ValidUntilBlock)
+	validUntilBlock, err := controller.getValidUntilBlock(req.ValidUntilBlock, authorization, chain_code)
 	if err != nil {
 		return err
 	}
 
-	systemConfig, err := controller.GetSystemConfig()
+	systemConfig, err := controller.GetSystemConfig(authorization, chain_code)
 	if err != nil {
 		return err
 	}
@@ -142,8 +149,8 @@ func (controller controllerClient) SignRawTx() {
 
 }
 
-func (controller controllerClient) getValidUntilBlock(validUntilBlock string) (uint64, error) {
-	blockNumber, err := controller.GetBlockNumber(false)
+func (controller controllerClient) getValidUntilBlock(validUntilBlock, authorization, chain_code string) (uint64, error) {
+	blockNumber, err := controller.GetBlockNumber(false, authorization, chain_code)
 	if err != nil {
 		return 0, err
 	}

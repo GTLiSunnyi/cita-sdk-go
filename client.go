@@ -4,7 +4,7 @@ import (
 	"github.com/GTLiSunnyi/cita-sdk-go/modules/controller"
 	"github.com/GTLiSunnyi/cita-sdk-go/modules/executor"
 	"github.com/GTLiSunnyi/cita-sdk-go/modules/key"
-	sdk "github.com/GTLiSunnyi/cita-sdk-go/types"
+	sdktypes "github.com/GTLiSunnyi/cita-sdk-go/types"
 )
 
 type Client struct {
@@ -13,7 +13,7 @@ type Client struct {
 	Executor   executor.Client
 }
 
-func NewClient(cfg sdk.ClientConfig) (*Client, error) {
+func NewClient(cfg sdktypes.ClientConfig) (*Client, error) {
 	// 初始化目录
 	if err := cfg.FileManager.CreateRootDir(); err != nil {
 		return nil, err
