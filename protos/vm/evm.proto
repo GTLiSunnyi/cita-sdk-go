@@ -16,8 +16,9 @@ syntax = "proto3";
 
 package evm;
 
-import "protos/common.proto";
-import "protos/blockchain.proto";
+import "common.proto";
+
+option go_package = "github.com/GTLiSunnyi/cita-sdk-go/protos/proto";
 
 message Receipt {
   bytes transaction_hash = 1;

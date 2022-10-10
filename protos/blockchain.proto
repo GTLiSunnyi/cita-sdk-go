@@ -16,7 +16,7 @@ syntax = "proto3";
 
 package blockchain;
 
-option go_package = "./protos/proto";
+option go_package = "github.com/GTLiSunnyi/cita-sdk-go/protos/proto";
 
 message BlockHeader {
     // hash of previous BlockHeader

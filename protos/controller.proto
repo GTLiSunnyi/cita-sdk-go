@@ -14,12 +14,12 @@
 
 syntax = "proto3";
 
-import "protos/common.proto";
-import "protos/blockchain.proto";
+import "common.proto";
+import "blockchain.proto";
 
 package controller;
 
-option go_package = "./protos/proto";
+option go_package = "github.com/GTLiSunnyi/cita-sdk-go/modules/controller";
 
 message Flag {
     bool flag = 1;

@@ -41,9 +41,9 @@ func NewClient(controller_addr string) (Client, error) {
 // 获取区块高度
 // if set for_padding, get block number of the pending block
 func (controller controllerClient) GetBlockNumber(for_padding bool, authorization, chain_code string) (uint64, error) {
-	flag := &proto.Flag{Flag: for_padding}
+	flag := &Flag{Flag: for_padding}
 
-	gRpcClient := proto.NewRPCServiceClient(controller.client)
+	gRpcClient := NewRPCServiceClient(controller.client)
 
 	// 设置请求头
 	ctx := utils.MakeCtxWithHeader(authorization, chain_code)
@@ -70,8 +70,8 @@ func (controller controllerClient) GetBlockNumber(for_padding bool, authorizatio
 }
 
 // 获取系统配置
-func (controller controllerClient) GetSystemConfig(authorization, chain_code string) (*proto.SystemConfig, error) {
-	gRpcClient := proto.NewRPCServiceClient(controller.client)
+func (controller controllerClient) GetSystemConfig(authorization, chain_code string) (*SystemConfig, error) {
+	gRpcClient := NewRPCServiceClient(controller.client)
 
 	// 设置请求头
 	ctx := utils.MakeCtxWithHeader(authorization, chain_code)
@@ -142,6 +142,7 @@ func (controller controllerClient) SendTx(keypair types.KeyPair, req SendRequest
 
 func (controller controllerClient) SendRawTx(rawTx proto.Transaction, keypair types.KeyPair) error {
 	// keypair.Sign()
+
 	return nil
 }
 

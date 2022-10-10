@@ -14,12 +14,12 @@
 
 syntax = "proto3";
 
-import "protos/common.proto";
-import "protos/blockchain.proto";
+import "common.proto";
+import "blockchain.proto";
 
 package crypto;
 
-option go_package = "./protos/proto";
+option go_package = "github.com/GTLiSunnyi/cita-sdk-go/protos/proto";
 
 message GetCryptoInfoResponse {
     common.StatusCode status = 1;

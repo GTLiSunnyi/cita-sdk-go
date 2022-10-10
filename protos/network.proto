@@ -14,11 +14,11 @@
 
 syntax = "proto3";
 
-import "protos/common.proto";
+import "common.proto";
 
 package network;
 
-option go_package = "./protos/proto";
+option go_package = "github.com/GTLiSunnyi/cita-sdk-go/protos/proto";
 
 message NetworkStatusResponse {
     uint64 peer_count = 1;
