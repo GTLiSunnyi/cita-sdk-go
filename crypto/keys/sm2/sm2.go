@@ -2,7 +2,6 @@ package sm2
 
 import (
 	"crypto/rand"
-	"encoding/asn1"
 	"encoding/hex"
 	"fmt"
 	"math/big"
@@ -18,10 +17,6 @@ type SM2KeyPair struct {
 	Address    []byte
 	PrivateKey *sm2.PrivateKey
 	PublicKey  *sm2.PublicKey
-}
-
-type sm2Signature struct {
-	R, S *big.Int
 }
 
 func NewKeyPair() (types.KeyPair, error) {
@@ -63,20 +58,14 @@ func (keypair SM2KeyPair) Type() types.KeyType {
 }
 
 func (keypair SM2KeyPair) Sign(msg []byte) ([]byte, error) {
-	sigBytes, err := keypair.PrivateKey.Sign(nil, msg, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	var sign sm2Signature
-	_, err = asn1.Unmarshal(sigBytes, &sign)
+	r, s, err := sm2.Sm2Sign(keypair.PrivateKey, msg, nil, nil)
 	if err != nil {
 		return nil, err
 	}
 
 	pkBytes := append(keypair.PublicKey.X.Bytes(), keypair.PublicKey.Y.Bytes()...)
 
-	return append(append(sign.R.Bytes(), sign.S.Bytes()...), pkBytes...), nil
+	return append(append(r.Bytes(), s.Bytes()...), pkBytes...), nil
 }
 
 func (keypair SM2KeyPair) Verify(msg []byte, sig []byte) bool {
