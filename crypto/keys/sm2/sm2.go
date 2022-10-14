@@ -2,6 +2,7 @@ package sm2
 
 import (
 	"crypto/rand"
+	"encoding/asn1"
 	"encoding/hex"
 	"fmt"
 	"math/big"
@@ -12,15 +13,15 @@ import (
 	"github.com/GTLiSunnyi/cita-sdk-go/utils"
 )
 
-const (
-	address_size = 20
-)
-
 type SM2KeyPair struct {
 	types.KeyType
-	Address    string
+	Address    []byte
 	PrivateKey *sm2.PrivateKey
 	PublicKey  *sm2.PublicKey
+}
+
+type sm2Signature struct {
+	R, S *big.Int
 }
 
 func NewKeyPair() (types.KeyPair, error) {
@@ -31,7 +32,7 @@ func NewKeyPair() (types.KeyPair, error) {
 
 	publicKey := &privateKey.PublicKey
 
-	address := "0x" + fmt.Sprintf("%x", utils.Sm3Hash(append(publicKey.X.Bytes(), publicKey.Y.Bytes()...))[32-address_size:])
+	address := utils.Sm3Hash(append(publicKey.X.Bytes(), publicKey.Y.Bytes()...))[32-types.AddressSize:]
 
 	return SM2KeyPair{
 		KeyType:    types.Sm2Type,
@@ -49,8 +50,12 @@ func (keypair SM2KeyPair) GetPublicKey() string {
 	return "0x" + hex.EncodeToString(append(keypair.PublicKey.X.Bytes(), keypair.PublicKey.Y.Bytes()...))
 }
 
-func (keypair SM2KeyPair) GetAddress() string {
+func (keypair SM2KeyPair) GetAddress() []byte {
 	return keypair.Address
+}
+
+func (keypair SM2KeyPair) GetAddressString() string {
+	return "0x" + fmt.Sprintf("%x", keypair.Address)
 }
 
 func (keypair SM2KeyPair) Type() types.KeyType {
@@ -58,7 +63,20 @@ func (keypair SM2KeyPair) Type() types.KeyType {
 }
 
 func (keypair SM2KeyPair) Sign(msg []byte) ([]byte, error) {
-	return keypair.PrivateKey.Sign(nil, msg, nil)
+	sigBytes, err := keypair.PrivateKey.Sign(nil, msg, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var sign sm2Signature
+	_, err = asn1.Unmarshal(sigBytes, &sign)
+	if err != nil {
+		return nil, err
+	}
+
+	pkBytes := append(keypair.PublicKey.X.Bytes(), keypair.PublicKey.Y.Bytes()...)
+
+	return append(append(sign.R.Bytes(), sign.S.Bytes()...), pkBytes...), nil
 }
 
 func (keypair SM2KeyPair) Verify(msg []byte, sig []byte) bool {
@@ -79,7 +97,7 @@ func ImportKeyPair(str string) (types.KeyPair, error) {
 	privateKey.PublicKey.X, privateKey.PublicKey.Y = c.ScalarBaseMult(k.Bytes())
 
 	publicKey := &privateKey.PublicKey
-	address := "0x" + fmt.Sprintf("%x", utils.Sm3Hash(append(publicKey.X.Bytes(), publicKey.Y.Bytes()...))[32-address_size:])
+	address := utils.Sm3Hash(append(publicKey.X.Bytes(), publicKey.Y.Bytes()...))[32-types.AddressSize:]
 
 	return SM2KeyPair{
 		KeyType:    types.Sm2Type,

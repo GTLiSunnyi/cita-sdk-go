@@ -53,7 +53,7 @@ func (k keyClient) Generate(name, password string) (types.KeyPair, error) {
 		Name:       name,
 		IsLocked:   isLocked,
 		CryptoType: k.Algo,
-		Address:    keypair.GetAddress(),
+		Address:    keypair.GetAddressString(),
 		PublicKey:  keypair.GetPublicKey(),
 		PrivateKey: privateKey,
 	}
@@ -118,7 +118,7 @@ func (k keyClient) Import(name, password, privKeyStr string) (types.KeyPair, err
 		Name:       name,
 		IsLocked:   isLocked,
 		CryptoType: k.Algo,
-		Address:    keypair.GetAddress(),
+		Address:    keypair.GetAddressString(),
 		PublicKey:  keypair.GetPublicKey(),
 		PrivateKey: privateKey,
 	}

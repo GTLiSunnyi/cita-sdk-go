@@ -1,42 +1,11 @@
 package test
 
 import (
-	"bytes"
-	"encoding/gob"
-	"encoding/json"
-	"fmt"
-	"log"
 	"testing"
 
 	sdk "github.com/GTLiSunnyi/cita-sdk-go"
-	"github.com/GTLiSunnyi/cita-sdk-go/protos/proto"
 	sdktypes "github.com/GTLiSunnyi/cita-sdk-go/types"
 )
-
-func TestXxx(t *testing.T) {
-	// 序列化
-	s1 := proto.Transaction{
-		Version:         1,
-		To:              []byte{1},
-		Nonce:           "1",
-		Quota:           1,
-		ValidUntilBlock: 1,
-		Data:            []byte{1},
-		Value:           []byte{1},
-		ChainId:         []byte{1},
-	}
-	var buffer bytes.Buffer
-	encoder := gob.NewEncoder(&buffer) //创建编码器
-	err1 := encoder.Encode(&s1)        //编码
-	if err1 != nil {
-		log.Panic(err1)
-	}
-	fmt.Printf("序列化后：%x\n", buffer.Bytes())
-
-	data, _ := json.Marshal(&s1)
-	fmt.Printf("序列化后：%x\n", data)
-
-}
 
 func TestKey(t *testing.T) {
 	// 创建客户端

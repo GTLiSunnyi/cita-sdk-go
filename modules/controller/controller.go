@@ -12,6 +12,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/status"
+	grpcproto "google.golang.org/protobuf/proto"
 
 	"github.com/GTLiSunnyi/cita-sdk-go/crypto/types"
 	"github.com/GTLiSunnyi/cita-sdk-go/protos/proto"
@@ -98,27 +99,30 @@ func (controller controllerClient) GetSystemConfig(authorization, chain_code str
 }
 
 // 发送交易
-func (controller controllerClient) SendTx(keypair types.KeyPair, req SendRequest, authorization, chain_code string) error {
-	to, err := utils.ParseData(req.To)
+func (controller controllerClient) SendTx(keypair types.KeyPair, req SendRequest, authorization, chain_code string) ([]byte, error) {
+	to, err := utils.ParseAddress(req.To)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	data, err := utils.ParseData(req.Data)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	value, err := utils.ParseData(req.Value)
+	value, err := utils.ParseValue(req.Value)
 	if err != nil {
-		return err
+		return nil, err
+	}
+	if req.Quota == 0 {
+		req.Quota = 200000
 	}
 	validUntilBlock, err := controller.getValidUntilBlock(req.ValidUntilBlock, authorization, chain_code)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	systemConfig, err := controller.GetSystemConfig(authorization, chain_code)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	rand.Seed(time.Now().Unix())
@@ -135,22 +139,83 @@ func (controller controllerClient) SendTx(keypair types.KeyPair, req SendRequest
 		ChainId:         systemConfig.ChainId,
 	}
 
-	controller.SendRawTx(rawTx, keypair)
-
-	return nil
+	return controller.sendRawTx(&rawTx, keypair, authorization, chain_code)
 }
 
-func (controller controllerClient) SendRawTx(rawTx proto.Transaction, keypair types.KeyPair) error {
-	// keypair.Sign()
+func (controller controllerClient) sendRawTx(rawTx *proto.Transaction, keypair types.KeyPair, authorization, chain_code string) ([]byte, error) {
+	tx, err := controller.signRawTx(rawTx, keypair)
+	if err != nil {
+		return nil, err
+	}
 
-	return nil
+	return controller.sendRaw(tx, authorization, chain_code)
 }
 
-func (controller controllerClient) SignRawTx() {
+func (controller controllerClient) signRawTx(rawTx *proto.Transaction, keypair types.KeyPair) (*proto.RawTransaction, error) {
+	// 序列化
+	buf, err := grpcproto.Marshal(rawTx)
+	if err != nil {
+		return nil, err
+	}
 
+	// 哈希
+	tx_hash := utils.Sm3Hash(buf)
+
+	// 签名
+	signature, err := keypair.Sign(tx_hash)
+	if err != nil {
+		return nil, err
+	}
+
+	witness := &proto.Witness{
+		Signature: signature,
+		Sender:    keypair.GetAddress(),
+	}
+
+	normalTx := &proto.RawTransaction_NormalTx{
+		NormalTx: &proto.UnverifiedTransaction{
+			Transaction:     rawTx,
+			TransactionHash: tx_hash,
+			Witness:         witness,
+		},
+	}
+
+	return &proto.RawTransaction{
+		Tx: normalTx,
+	}, nil
+}
+
+func (controller controllerClient) sendRaw(tx *proto.RawTransaction, authorization, chain_code string) ([]byte, error) {
+	gRpcClient := NewRPCServiceClient(controller.client)
+
+	// 设置请求头
+	ctx := utils.MakeCtxWithHeader(authorization, chain_code)
+
+	// 设置 grpc 超时时间
+	clientDeadline := time.Now().Add(sdktype.GRPC_TIMEOUT)
+	ctxH, cancel := context.WithDeadline(ctx, clientDeadline)
+	defer cancel()
+
+	callRes, err := gRpcClient.SendRawTransaction(ctxH, tx)
+	if err != nil {
+		//获取错误状态
+		statu, ok := status.FromError(err)
+		if ok {
+			//判断是否为调用超时
+			if statu.Code() == codes.DeadlineExceeded {
+				return nil, errors.New("请求超时")
+			}
+		}
+		return nil, err
+	}
+
+	return callRes.GetHash(), nil
 }
 
 func (controller controllerClient) getValidUntilBlock(validUntilBlock, authorization, chain_code string) (uint64, error) {
+	if validUntilBlock == "" {
+		validUntilBlock = "+95"
+	}
 	blockNumber, err := controller.GetBlockNumber(false, authorization, chain_code)
 	if err != nil {
 		return 0, err
