@@ -1,9 +1,12 @@
 package controller
 
-import "github.com/GTLiSunnyi/cita-sdk-go/crypto/types"
+import (
+	"github.com/GTLiSunnyi/cita-sdk-go/crypto/types"
+	sdktypes "github.com/GTLiSunnyi/cita-sdk-go/types"
+)
 
 type Client interface {
-	GetBlockNumber(for_padding bool, authorization, chain_code string) (uint64, error)
-	GetSystemConfig(authorization, chain_code string) (*SystemConfig, error)
-	SendTx(keypair types.KeyPair, req SendRequest, authorization, chain_code string) ([]byte, error)
+	GetBlockNumber(for_padding bool, header sdktypes.GrpcRequestHeader) (uint64, error)
+	GetSystemConfig(header sdktypes.GrpcRequestHeader) (*SystemConfig, error)
+	SendTx(keypair types.KeyPair, req SendRequest, header sdktypes.GrpcRequestHeader) (string, error)
 }

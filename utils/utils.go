@@ -1,16 +1,14 @@
 package utils
 
 import (
-	"context"
 	"encoding/hex"
 	"errors"
 	"fmt"
 	"strings"
 
-	"google.golang.org/grpc/metadata"
+	"github.com/tjfoc/gmsm/sm3"
 
 	"github.com/GTLiSunnyi/cita-sdk-go/crypto/types"
-	"github.com/tjfoc/gmsm/sm3"
 )
 
 func ParseAddress(str string) ([]byte, error) {
@@ -67,13 +65,4 @@ func PreSupplyZero(str string, length int) (string, error) {
 
 func Sm3Hash(data []byte) []byte {
 	return sm3.New().Sum(data)
-}
-
-func MakeCtxWithHeader(authorization, chain_code string) context.Context {
-	md := metadata.New(map[string]string{
-		"x-authorization": authorization,
-		"chain_code":      chain_code,
-	})
-
-	return metadata.NewOutgoingContext(context.Background(), md)
 }

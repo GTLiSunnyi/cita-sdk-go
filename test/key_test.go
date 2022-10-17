@@ -9,7 +9,7 @@ import (
 
 func TestKey(t *testing.T) {
 	// 创建客户端
-	cfg, err := sdktypes.NewClientConfig("controller_addr", "executor_addr")
+	cfg, err := sdktypes.NewClientConfig(GrpcAddress)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -24,21 +24,21 @@ func TestKey(t *testing.T) {
 	if err != nil {
 		t.Fatal(err.Error())
 	}
-	t.Log(keypair1.GetAddress())
+	t.Log(keypair1.GetAddressString())
 
 	// 测试读取密钥
 	keypair2, err := client.Key.Get("test", "123")
 	if err != nil {
 		t.Fatal(err.Error())
 	}
-	t.Log(keypair2.GetAddress())
+	t.Log(keypair2.GetAddressString())
 
 	// 测试导入密钥
 	keypair3, err := client.Key.Import("changename1", "1234", keypair1.GetPrivateKey())
 	if err != nil {
 		t.Fatal(err.Error())
 	}
-	t.Log(keypair3.GetAddress())
+	t.Log(keypair3.GetAddressString())
 
 	// 测试签名、验证
 	msg := []byte("testmsg")

@@ -10,7 +10,7 @@ const (
 type KeyPair interface {
 	GetPrivateKey() string
 	GetPublicKey() string
-	GetAddress() []byte
+	GetAddressBytes() []byte
 	GetAddressString() string
 	Type() KeyType
 	Sign(msg []byte) ([]byte, error)

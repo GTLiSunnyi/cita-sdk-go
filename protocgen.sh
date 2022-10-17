@@ -13,4 +13,4 @@ done
 
 # move proto files to the right places
 cp -r github.com/GTLiSunnyi/cita-sdk-go/* ./
-rm -fr github.com
+rm -rf github.com
