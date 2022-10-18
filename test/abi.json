@@ -54,9 +54,14 @@
                         "internalType": "int256",
                         "name": "num",
                         "type": "int256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "str",
+                        "type": "string"
                     }
                 ],
-                "internalType": "struct citaSdkTest14.Sdk",
+                "internalType": "struct citaSdkTest15.Sdk",
                 "name": "",
                 "type": "tuple"
             }

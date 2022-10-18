@@ -1,13 +1,14 @@
 pragma solidity >=0.6.3;
 pragma experimental ABIEncoderV2;
 
-contract citaSdkTest14 {
+contract citaSdkTest15 {
     struct Sdk {
         int num;
+        string str;
     }
 
     int a;
-    Sdk b = Sdk(1);
+    Sdk b = Sdk(1, "test");
 
     event Add(int A, string B);
     event AddB(int A, string B);

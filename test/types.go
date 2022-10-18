@@ -7,7 +7,7 @@ const Authorization = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJXZ2lDZ
 const ChainCode = "chain-762429652294832128"
 const AppUserCode = "tianle"
 
-const ContractAddress = "0x68a2a8c6f17071633cf13aed3425f4bd0f96f7a2"
+const ContractAddress = "0x51a78a0e687f91c90ca1515d4804e8ee18c563bc"
 const Data = "0x4f2be91f"
 const MethodName = "add"
 const EventName = "Add"
@@ -25,4 +25,5 @@ const CallFuncName = "get"
 
 type Sdk struct {
 	Num *big.Int
+	Str string
 }
