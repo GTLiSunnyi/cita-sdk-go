@@ -1,6 +1,7 @@
 package rivSpace
 
 const GetReceiptTimeout = 10000 // 单位：毫秒
+const GetReceiptInterval = 500
 
 type SendResponse struct {
 	Code    int    `json:"code"`
@@ -24,7 +25,9 @@ type receiptData struct {
 	Logs            []logs `json:"logs"`
 }
 type logs struct {
-	Data string `json:"data"`
+	Address string   `json:"address"`
+	Topics  []string `json:"topics"`
+	Data    string   `json:"data"`
 }
 
 type CreateAccountResponse struct {

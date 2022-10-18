@@ -5,10 +5,15 @@ const Authorization = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJXZ2lDZ
 const ChainCode = "chain-762429652294832128"
 const AppUserCode = ""
 
-const ContractAddress = "0xc154bcdf96e7d689a163e3c9a4397b1b4ddfabd9"
+const ContractAddress = "0xe8534c2c771d1d79a131cf79e13c531b8b40a9c8"
 const Data = "0x4f2be91f"
 const MethodName = "add"
 const EventName = "Add"
+
+type AddEvent struct {
+	A int
+	B string
+}
 
 const AppId = "20220707152315VT5pPx"
 const AppSecret = "1d38f0bcbf245a7ca6f1f323f0dc70c6"

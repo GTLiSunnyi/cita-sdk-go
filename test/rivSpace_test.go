@@ -1,6 +1,7 @@
 package test
 
 import (
+	"encoding/json"
 	"testing"
 
 	sdk "github.com/GTLiSunnyi/cita-sdk-go"
@@ -54,9 +55,16 @@ func TestRivSpace(t *testing.T) {
 		t.Fatal(err.Error())
 	}
 
-	event, err := client.RivSpace.GetEvent(contract, receipt, EventName)
+	funcSignature := "Add(int256,string)"
+	data, err := client.RivSpace.GetEvent(contract, receipt, funcSignature, EventName)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
-	t.Log(event)
+
+	var res = &AddEvent{}
+	err = json.Unmarshal(data, res)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	t.Log(res)
 }

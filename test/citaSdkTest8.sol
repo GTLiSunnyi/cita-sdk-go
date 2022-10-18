@@ -1,10 +1,10 @@
 pragma solidity >=0.6.3;
 
-contract citaSdkTest7 {
+contract citaSdkTest8 {
     int a;
 
-    event Add(int indexed a, string indexed b);
-    event AddB(int indexed a, string indexed b);
+    event Add(int A, string B);
+    event AddB(int A, string B);
 
     function add() public {
         emit Add(a, "hello");

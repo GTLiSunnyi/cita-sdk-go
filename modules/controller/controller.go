@@ -24,12 +24,12 @@ type controllerClient struct {
 	client *grpc.ClientConn
 }
 
-func NewClient(controller_addr string) (Client, error) {
+func NewClient(grpc_addr string) (Client, error) {
 	dialOpts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	}
 
-	client, err := grpc.Dial(controller_addr, dialOpts...)
+	client, err := grpc.Dial(grpc_addr, dialOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -42,15 +42,13 @@ func NewClient(controller_addr string) (Client, error) {
 // 获取区块高度
 // if set for_padding, get block number of the pending block
 func (client controllerClient) GetBlockNumber(for_padding bool, header sdktypes.GrpcRequestHeader) (uint64, error) {
-	flag := &Flag{Flag: for_padding}
-
-	gRpcClient := NewRPCServiceClient(client.client)
-
 	// 设置 grpc context
 	ctx, cancel := sdktypes.MakeGrpcRequestCtx(header)
 	defer cancel()
 
-	callRes, err := gRpcClient.GetBlockNumber(ctx, flag)
+	flag := &Flag{Flag: for_padding}
+
+	callRes, err := NewRPCServiceClient(client.client).GetBlockNumber(ctx, flag)
 	if err != nil {
 		//获取错误状态
 		statu, ok := status.FromError(err)
@@ -68,13 +66,11 @@ func (client controllerClient) GetBlockNumber(for_padding bool, header sdktypes.
 
 // 获取系统配置
 func (client controllerClient) GetSystemConfig(header sdktypes.GrpcRequestHeader) (*SystemConfig, error) {
-	gRpcClient := NewRPCServiceClient(client.client)
-
 	// 设置 grpc context
 	ctx, cancel := sdktypes.MakeGrpcRequestCtx(header)
 	defer cancel()
 
-	callRes, err := gRpcClient.GetSystemConfig(ctx, &proto.Empty{})
+	callRes, err := NewRPCServiceClient(client.client).GetSystemConfig(ctx, &proto.Empty{})
 	if err != nil {
 		//获取错误状态
 		statu, ok := status.FromError(err)
@@ -177,8 +173,6 @@ func (client controllerClient) signRawTx(rawTx *sdktypes.Transaction, keypair ty
 	// 	return nil, err
 	// }
 
-	// gRpcClient := crypto.NewKmsServiceClient(grpcclient)
-
 	// // 构造请求头
 	// header := sdktypes.GrpcRequestHeader{
 	// 	XAuthorization: authorization,
@@ -190,7 +184,7 @@ func (client controllerClient) signRawTx(rawTx *sdktypes.Transaction, keypair ty
 	// ctx, cancel := sdktypes.MakeGrpcRequestCtx(header)
 	// defer cancel()
 
-	// callRes, err := gRpcClient.SignMessage(ctx, &crypto.SignMessageRequest{Msg: tx_hash})
+	// callRes, err := crypto.NewKmsServiceClient(grpcclient).SignMessage(ctx, &crypto.SignMessageRequest{Msg: tx_hash})
 	// if err != nil {
 	// 	//获取错误状态
 	// 	statu, ok := status.FromError(err)
@@ -226,13 +220,11 @@ func (client controllerClient) signRawTx(rawTx *sdktypes.Transaction, keypair ty
 }
 
 func (client controllerClient) sendRaw(tx *sdktypes.RawTransaction, header sdktypes.GrpcRequestHeader) ([]byte, error) {
-	gRpcClient := NewRPCServiceClient(client.client)
-
 	// 设置 grpc context
 	ctx, cancel := sdktypes.MakeGrpcRequestCtx(header)
 	defer cancel()
 
-	callRes, err := gRpcClient.SendRawTransaction(ctx, tx)
+	callRes, err := NewRPCServiceClient(client.client).SendRawTransaction(ctx, tx)
 	if err != nil {
 		//获取错误状态
 		statu, ok := status.FromError(err)
@@ -279,4 +271,8 @@ func (client controllerClient) getValidUntilBlock(validUntilBlock string, header
 
 		return num, nil
 	}
+}
+
+func (client controllerClient) GetTransaction() {
+	// TODO
 }

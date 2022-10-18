@@ -3,15 +3,15 @@
         "anonymous": false,
         "inputs": [
             {
-                "indexed": true,
+                "indexed": false,
                 "internalType": "int256",
-                "name": "a",
+                "name": "A",
                 "type": "int256"
             },
             {
-                "indexed": true,
+                "indexed": false,
                 "internalType": "string",
-                "name": "b",
+                "name": "B",
                 "type": "string"
             }
         ],
@@ -22,15 +22,15 @@
         "anonymous": false,
         "inputs": [
             {
-                "indexed": true,
+                "indexed": false,
                 "internalType": "int256",
-                "name": "a",
+                "name": "A",
                 "type": "int256"
             },
             {
-                "indexed": true,
+                "indexed": false,
                 "internalType": "string",
-                "name": "b",
+                "name": "B",
                 "type": "string"
             }
         ],

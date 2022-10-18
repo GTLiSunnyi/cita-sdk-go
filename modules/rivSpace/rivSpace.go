@@ -6,6 +6,8 @@ import (
 	"errors"
 	"time"
 
+	"github.com/ethereum/go-ethereum/crypto"
+
 	"github.com/GTLiSunnyi/cita-sdk-go/types"
 	"github.com/GTLiSunnyi/cita-sdk-go/types/contract"
 )
@@ -97,9 +99,9 @@ func (client rivSpaceClient) GetReceipt(tx_hash string, header types.GrpcRequest
 		return receipt, err
 	}
 
-	// 交易没有上链的话，间隔 250ms 继续查询
+	// 交易没有上链的话，间隔 继续查询
 	if receipt.Data.TransactionHash == "" {
-		time.Sleep(time.Duration(250) * time.Millisecond)
+		time.Sleep(time.Duration(GetReceiptInterval) * time.Millisecond)
 		return client.GetReceipt(tx_hash, header)
 	}
 
@@ -109,19 +111,25 @@ func (client rivSpaceClient) GetReceipt(tx_hash string, header types.GrpcRequest
 	return receipt, nil
 }
 
-func (client rivSpaceClient) GetEvent(contract contract.Contract, receipt Receipt, eventName string) (map[string]interface{}, error) {
-	var m = map[string]interface{}{}
+func (client rivSpaceClient) GetEvent(contract contract.Contract, receipt Receipt, funcSignature, eventName string) ([]byte, error) {
+	topicHash := crypto.Keccak256Hash([]byte(funcSignature)).Hex()
+
+	var event = make(map[string]interface{})
 	for _, log := range receipt.Data.Logs {
+		if log.Topics[0] != topicHash {
+			continue
+		}
+
 		logBytes, err := hex.DecodeString(log.Data[2:])
 		if err != nil {
 			return nil, err
 		}
 
-		err = contract.Abi.UnpackIntoMap(m, eventName, logBytes)
+		err = contract.Abi.UnpackIntoMap(event, eventName, logBytes)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	return m, nil
+	return json.Marshal(event)
 }
