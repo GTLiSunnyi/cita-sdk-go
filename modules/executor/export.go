@@ -6,5 +6,5 @@ import (
 )
 
 type Client interface {
-	Call(header types.GrpcRequestHeader, contract *contract.Contract, fromAddress string, funcName string, params []interface{}, res interface{}) error
+	Call(header types.GrpcRequestHeader, contract contract.Contract, fromAddress string, funcName string, params []interface{}, res interface{}) error
 }

@@ -32,14 +32,14 @@ func NewClient(grpc_addr string) (Client, error) {
 	}, nil
 }
 
-func (client executorClient) Call(header types.GrpcRequestHeader, contract *contract.Contract, fromAddress string, funcName string, params []interface{}, res interface{}) error {
+// params：填函数的参数，可以传入 big.Int\[]byte\string，例如：[]interface{}{big.NewInt(10), []byte{1}}
+func (client executorClient) Call(header types.GrpcRequestHeader, contract contract.Contract, userAddress string, funcName string, params []interface{}, res interface{}) error {
 	data, err := contract.Abi.Pack(funcName, params...)
 	if err != nil {
-		fmt.Printf("abi.Pack failed: %v\n", err)
 		return err
 	}
 
-	from, err := utils.ParseAddress(fromAddress)
+	from, err := utils.ParseAddress(userAddress)
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,12 @@ func (client executorClient) Call(header types.GrpcRequestHeader, contract *cont
 		return err
 	}
 
-	data = callRes.GetValue()[2:]
+	data = callRes.GetValue()
 
-	return contract.Abi.UnpackIntoInterface(res, funcName, data)
+	if len(data)%32 != 0 {
+		return fmt.Errorf("data 的长度不是32的倍数, length: %d", len(data))
+	}
+
+	err = contract.Abi.Unpack(res, funcName, data)
+	return err
 }

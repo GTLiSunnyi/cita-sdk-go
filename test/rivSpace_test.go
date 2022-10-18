@@ -56,7 +56,7 @@ func TestRivSpace(t *testing.T) {
 	}
 
 	funcSignature := "Add(int256,string)"
-	data, err := client.RivSpace.GetEvent(contract, receipt, funcSignature, EventName)
+	data, err := contract.GetEvent(receipt, funcSignature, EventName)
 	if err != nil {
 		t.Fatal(err.Error())
 	}

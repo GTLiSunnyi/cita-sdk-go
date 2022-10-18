@@ -49,9 +49,16 @@
         "name": "get",
         "outputs": [
             {
-                "internalType": "int256",
+                "components": [
+                    {
+                        "internalType": "int256",
+                        "name": "num",
+                        "type": "int256"
+                    }
+                ],
+                "internalType": "struct citaSdkTest14.Sdk",
                 "name": "",
-                "type": "int256"
+                "type": "tuple"
             }
         ],
         "stateMutability": "view",

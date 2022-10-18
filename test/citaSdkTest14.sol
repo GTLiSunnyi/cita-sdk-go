@@ -1,7 +1,13 @@
 pragma solidity >=0.6.3;
+pragma experimental ABIEncoderV2;
 
-contract citaSdkTest8 {
+contract citaSdkTest14 {
+    struct Sdk {
+        int num;
+    }
+
     int a;
+    Sdk b = Sdk(1);
 
     event Add(int A, string B);
     event AddB(int A, string B);
@@ -12,7 +18,7 @@ contract citaSdkTest8 {
         a++;
     }
 
-    function get() public view returns(int) {
-        return a;
+    function get() public view returns(Sdk memory) {
+        return b;
     }
 }

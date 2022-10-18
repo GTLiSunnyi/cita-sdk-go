@@ -1,15 +1,11 @@
 package rivSpace
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"time"
 
-	"github.com/ethereum/go-ethereum/crypto"
-
 	"github.com/GTLiSunnyi/cita-sdk-go/types"
-	"github.com/GTLiSunnyi/cita-sdk-go/types/contract"
 )
 
 type rivSpaceClient struct {
@@ -26,23 +22,23 @@ func NewClient(rivSpaceAddress types.RivSpaceAddress) Client {
 	}
 }
 
-func (client rivSpaceClient) Send(params map[string]interface{}, header types.GrpcRequestHeader) (Receipt, error) {
+func (client rivSpaceClient) Send(params map[string]interface{}, header types.GrpcRequestHeader) (*types.Receipt, error) {
 	data, err := SendRivSpaceRequest(params, client.RunAddress, header)
 	if err != nil {
-		return Receipt{}, err
+		return nil, err
 	}
 
 	var res SendResponse
 	err = json.Unmarshal(data, &res)
 	if err != nil {
-		return Receipt{}, err
+		return nil, err
 	}
 
 	if res.Code != 200 {
-		return Receipt{}, errors.New(res.Message)
+		return nil, errors.New(res.Message)
 	}
 
-	var receipt Receipt
+	var receipt = &types.Receipt{}
 	ch := make(chan error, 1)
 	go func() {
 		var err error
@@ -83,17 +79,17 @@ func (client rivSpaceClient) CreateAccount(name, appId, appSecret string, header
 	return res.Data.Address, nil
 }
 
-func (client rivSpaceClient) GetReceipt(tx_hash string, header types.GrpcRequestHeader) (Receipt, error) {
+func (client rivSpaceClient) GetReceipt(tx_hash string, header types.GrpcRequestHeader) (*types.Receipt, error) {
 	params := map[string]interface{}{
 		"txHash": tx_hash,
 	}
 
 	data, err := SendRivSpaceRequest(params, client.ReceiptAddress, header)
 	if err != nil {
-		return Receipt{}, err
+		return nil, err
 	}
 
-	var receipt Receipt
+	var receipt = &types.Receipt{}
 	err = json.Unmarshal(data, &receipt)
 	if err != nil {
 		return receipt, err
@@ -109,27 +105,4 @@ func (client rivSpaceClient) GetReceipt(tx_hash string, header types.GrpcRequest
 		return receipt, errors.New(receipt.Data.ErrorMessage)
 	}
 	return receipt, nil
-}
-
-func (client rivSpaceClient) GetEvent(contract contract.Contract, receipt Receipt, funcSignature, eventName string) ([]byte, error) {
-	topicHash := crypto.Keccak256Hash([]byte(funcSignature)).Hex()
-
-	var event = make(map[string]interface{})
-	for _, log := range receipt.Data.Logs {
-		if log.Topics[0] != topicHash {
-			continue
-		}
-
-		logBytes, err := hex.DecodeString(log.Data[2:])
-		if err != nil {
-			return nil, err
-		}
-
-		err = contract.Abi.UnpackIntoMap(event, eventName, logBytes)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	return json.Marshal(event)
 }
