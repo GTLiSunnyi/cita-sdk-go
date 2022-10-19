@@ -7,10 +7,12 @@ const (
 	AddressSize = 20
 )
 
+type Address [AddressSize]byte
+
 type KeyPair interface {
 	GetPrivateKey() string
 	GetPublicKey() string
-	GetAddressBytes() []byte
+	GetAddressBytes() Address
 	GetAddressString() string
 	Type() KeyType
 	Sign(msg []byte) ([]byte, error)

@@ -33,10 +33,19 @@ func TestExecutor(t *testing.T) {
 		t.Fatal(err.Error())
 	}
 
-	var res Sdk
-	err = client.Executor.Call(header, contract, UserAddress, CallFuncName, []interface{}{}, &res)
+	// 获取结构体
+	var res1 GetStruct
+	err = client.Executor.Call(header, contract, UserAddress, GetStructFuncName, []interface{}{}, &res1)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
-	t.Log(res)
+	t.Log(res1)
+
+	// 获取数组
+	var res2 []string
+	err = client.Executor.Call(header, contract, UserAddress, GetArrFuncName, []interface{}{}, &res2)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	t.Log(len(res2))
 }

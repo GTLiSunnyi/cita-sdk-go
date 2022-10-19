@@ -9,6 +9,7 @@ import (
 	sdk "github.com/GTLiSunnyi/cita-sdk-go"
 	"github.com/GTLiSunnyi/cita-sdk-go/modules/controller"
 	sdktypes "github.com/GTLiSunnyi/cita-sdk-go/types"
+	"github.com/GTLiSunnyi/cita-sdk-go/types/contract"
 )
 
 func TestController(t *testing.T) {
@@ -45,17 +46,20 @@ func TestController(t *testing.T) {
 	t.Log("block interval: ", systemConfig.BlockInterval)
 
 	// 测试发送交易
-	i := rand.New(rand.NewSource(time.Now().UnixNano())).Int()
-	name := strconv.Itoa(i)
-	keypair, err := client.Key.Generate(name, "123")
+	keypair, err := client.Key.Generate(strconv.Itoa(rand.New(rand.NewSource(time.Now().UnixNano())).Int()), "123")
 	if err != nil {
 		t.Fatal(err.Error())
 	}
 	t.Log(keypair.GetAddressString())
 
+	contract, err := contract.NewContract(ContractAddress, "./abi.json")
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+
 	req := controller.SendRequest{
 		To:   ContractAddress,
-		Data: Data,
+		Data: contract.Abi.Methods[MethodName].ID,
 	}
 	hash, err := client.Controller.SendTx(keypair, req, header)
 	if err != nil {

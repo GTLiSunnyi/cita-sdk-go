@@ -82,10 +82,6 @@ func (client controllerClient) SendTx(keypair types.KeyPair, req SendRequest, he
 	if err != nil {
 		return "", err
 	}
-	data, err := utils.ParseData(req.Data)
-	if err != nil {
-		return "", err
-	}
 	value, err := utils.ParseValue(req.Value)
 	if err != nil {
 		return "", err
@@ -109,7 +105,7 @@ func (client controllerClient) SendTx(keypair types.KeyPair, req SendRequest, he
 	rawTx := sdktypes.Transaction{
 		Version:         systemConfig.Version,
 		To:              to,
-		Data:            data,
+		Data:            req.Data,
 		Value:           value,
 		Nonce:           nonce,
 		Quota:           req.Quota,
@@ -150,9 +146,11 @@ func (client controllerClient) signRawTx(rawTx *sdktypes.Transaction, keypair ty
 		return nil, err
 	}
 
+	var sender = keypair.GetAddressBytes()
+
 	witness := &sdktypes.Witness{
 		Signature: signature,
-		Sender:    keypair.GetAddressBytes(),
+		Sender:    sender[:],
 	}
 
 	normalTx := &sdktypes.RawTransaction_NormalTx{

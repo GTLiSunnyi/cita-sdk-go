@@ -14,7 +14,7 @@ import (
 
 type SM2KeyPair struct {
 	types.KeyType
-	Address    []byte
+	Address    types.Address
 	PrivateKey *sm2.PrivateKey
 	PublicKey  *sm2.PublicKey
 }
@@ -27,7 +27,8 @@ func NewKeyPair() (types.KeyPair, error) {
 
 	publicKey := &privateKey.PublicKey
 
-	address := utils.Sm3Hash(append(publicKey.X.Bytes(), publicKey.Y.Bytes()...))[32-types.AddressSize:]
+	var address types.Address
+	copy(address[:], utils.Sm3Hash(append(publicKey.X.Bytes(), publicKey.Y.Bytes()...))[32-types.AddressSize:])
 
 	return SM2KeyPair{
 		KeyType:    types.Sm2Type,
@@ -45,7 +46,7 @@ func (keypair SM2KeyPair) GetPublicKey() string {
 	return "0x" + hex.EncodeToString(append(keypair.PublicKey.X.Bytes(), keypair.PublicKey.Y.Bytes()...))
 }
 
-func (keypair SM2KeyPair) GetAddressBytes() []byte {
+func (keypair SM2KeyPair) GetAddressBytes() types.Address {
 	return keypair.Address
 }
 
@@ -86,7 +87,9 @@ func ImportKeyPair(str string) (types.KeyPair, error) {
 	privateKey.PublicKey.X, privateKey.PublicKey.Y = c.ScalarBaseMult(k.Bytes())
 
 	publicKey := &privateKey.PublicKey
-	address := utils.Sm3Hash(append(publicKey.X.Bytes(), publicKey.Y.Bytes()...))[32-types.AddressSize:]
+
+	var address types.Address
+	copy(address[:], utils.Sm3Hash(append(publicKey.X.Bytes(), publicKey.Y.Bytes()...))[32-types.AddressSize:])
 
 	return SM2KeyPair{
 		KeyType:    types.Sm2Type,

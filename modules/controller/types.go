@@ -9,7 +9,7 @@ package controller
 */
 type SendRequest struct {
 	To              string
-	Data            string
+	Data            []byte
 	Value           string
 	Quota           uint64
 	ValidUntilBlock string
