@@ -6,6 +6,8 @@ import (
 	"github.com/GTLiSunnyi/cita-sdk-go/modules/key"
 	"github.com/GTLiSunnyi/cita-sdk-go/modules/rivSpace"
 	sdktypes "github.com/GTLiSunnyi/cita-sdk-go/types"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 type Client struct {
@@ -21,15 +23,18 @@ func NewClient(cfg sdktypes.ClientConfig) (*Client, error) {
 		return nil, err
 	}
 
+	// 创建 grpc 客户端
+	dialOpts := []grpc.DialOption{
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	}
+	client, err := grpc.Dial(cfg.GrpcAddr, dialOpts...)
+	if err != nil {
+		return nil, err
+	}
+
 	key := key.NewClient(cfg.Algo, cfg.FileManager)
-	controller, err := controller.NewClient(cfg.GrpcAddr)
-	if err != nil {
-		return nil, err
-	}
-	executor, err := executor.NewClient(cfg.GrpcAddr)
-	if err != nil {
-		return nil, err
-	}
+	controller := controller.NewClient(client)
+	executor := executor.NewClient(client)
 	rivSpace := rivSpace.NewClient(cfg.RivSpaceAddress)
 
 	return &Client{

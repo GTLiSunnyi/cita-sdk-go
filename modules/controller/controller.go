@@ -10,7 +10,6 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/status"
 	grpcproto "google.golang.org/protobuf/proto"
 
@@ -24,19 +23,10 @@ type controllerClient struct {
 	client *grpc.ClientConn
 }
 
-func NewClient(grpc_addr string) (Client, error) {
-	dialOpts := []grpc.DialOption{
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-	}
-
-	client, err := grpc.Dial(grpc_addr, dialOpts...)
-	if err != nil {
-		return nil, err
-	}
-
-	return controllerClient{
+func NewClient(client *grpc.ClientConn) Client {
+	return &controllerClient{
 		client: client,
-	}, nil
+	}
 }
 
 // 获取区块高度
@@ -160,47 +150,6 @@ func (client controllerClient) signRawTx(rawTx *sdktypes.Transaction, keypair ty
 		return nil, err
 	}
 
-	// dialOpts := []grpc.DialOption{
-	// 	grpc.WithTransportCredentials(insecure.NewCredentials()),
-	// }
-
-	// const grpc_adress = "121.36.209.102:18987"
-	// const authorization = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJXZ2lDZVNIbVVoRTJqbmFxM0QwX2JOeXM4amdFdDM0cjJIMGdMdzFyOGdZIn0.eyJleHAiOjE2NjY2NzMzMzksImlhdCI6MTY2NTgwOTMzOSwianRpIjoiNWVkNmJlNTMtNTc0ZS00MmM5LTk4ZDktOWMxY2NhMjliNzk3IiwiaXNzIjoiaHR0cDovL3JpdnNwYWNlLWtleWNsb2FrOjgwODAvYXV0aC9yZWFsbXMvcml2c3BhY2UiLCJzdWIiOiJlZGM5ZjM5Yi01NDE2LTRkMDktYmQwYi1mN2FkMjlhNDM3YTYiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJhZG1pbi1jbGkiLCJzZXNzaW9uX3N0YXRlIjoiOGJmZTg3NjgtM2E5OS00YThlLWEyM2MtMjc1ZTVkZTA4MzA3IiwiYWNyIjoiMSIsInNjb3BlIjoicHJvZmlsZSBlbWFpbCBwaG9uZSByaXZzcGFjZS1hcHAiLCJzaWQiOiI4YmZlODc2OC0zYTk5LTRhOGUtYTIzYy0yNzVlNWRlMDgzMDciLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsIm9yZ0NvZGUiOiJvcmctMDAxIiwibmFtZSI6IjIwMjIwNzA3MTUyMzE1VlQ1cFB4IiwicHJlZmVycmVkX3VzZXJuYW1lIjoiMjAyMjA3MDcxNTIzMTV2dDVwcHgiLCJ1c2VyTmFtZSI6InJpdnNwYWNlIiwiZ2l2ZW5fbmFtZSI6IjIwMjIwNzA3MTUyMzE1VlQ1cFB4IiwiYXBwbGljYXRpb25Db2RlIjoiYXBwLTc0MjQ0MjY0ODk0OTg4Njk3NiIsInVzZXJDb2RlIjoicml2c3BhY2UiLCJhcHBsaWNhdGlvbk5hbWUiOiLlpKnkuZDmtYvor5UiLCJlbWFpbCI6ImFwcC03NDI0NDI2NDg5NDk4ODY5NzZAZXhhbXBsZS5jb20ifQ.DbmxMkLuPg7XZJuf98U6ev4Ae4oA3rBsntSJwXJVc53frNYe1nUKheKO1XygmDNF_0jvsPXuABQv3ESKvMi5aPhswpcWVeNeVELx1D-o-B1JqX4LhS3Bp4qiJgS8hhhtYRc0odZ6Fz_mOZTy7G5zQyWwa7LpGUdSXpcCi-be0Iegdv4p5fDN_3AIcYVtSB2Olr8x1p7ZFY69AZQg32KnWEOgKybIdrq9mTpPukyv-zBK5D2yRD3OD05019laUXdNeNSbN6eiRIFow__84ctOfuV3-WneM4C9-nJHsIxmDclinOLZXa7JzSbow6xmXBRCL0b533DHBmNGHQdlPCfHsw"
-	// const chain_code = "chain-762429652294832128"
-	// const app_user_code = "tianle"
-	// grpcclient, err := grpc.Dial(grpc_adress, dialOpts...)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	// // 构造请求头
-	// header := sdktypes.GrpcRequestHeader{
-	// 	XAuthorization: authorization,
-	// 	ChainCode:      chain_code,
-	// 	AppUserCode:    app_user_code,
-	// }
-
-	// // 设置 grpc context
-	// ctx, cancel := sdktypes.MakeGrpcRequestCtx(header)
-	// defer cancel()
-
-	// callRes, err := crypto.NewKmsServiceClient(grpcclient).SignMessage(ctx, &crypto.SignMessageRequest{Msg: tx_hash})
-	// if err != nil {
-	// 	//获取错误状态
-	// 	statu, ok := status.FromError(err)
-	// 	if ok {
-	// 		//判断是否为调用超时
-	// 		if statu.Code() == codes.DeadlineExceeded {
-	// 			return nil, errors.New("请求超时")
-	// 		}
-	// 	}
-	// 	return nil, err
-	// }
-
-	// fmt.Println(callRes.GetStatus())
-	// fmt.Println(callRes.GetSignature())
-	// fmt.Println(signature)
-
 	witness := &sdktypes.Witness{
 		Signature: signature,
 		Sender:    keypair.GetAddressBytes(),
@@ -273,6 +222,23 @@ func (client controllerClient) getValidUntilBlock(validUntilBlock string, header
 	}
 }
 
-func (client controllerClient) GetTransaction() {
-	// TODO
+func (client controllerClient) GetTransaction(header sdktypes.GrpcRequestHeader, tx_hash []byte) (*sdktypes.UnverifiedTransaction, error) {
+	// 设置 grpc context
+	ctx, cancel := sdktypes.MakeGrpcRequestCtx(header)
+	defer cancel()
+
+	callRes, err := NewRPCServiceClient(client.client).GetTransaction(ctx, &proto.Hash{Hash: tx_hash})
+	if err != nil {
+		//获取错误状态
+		statu, ok := status.FromError(err)
+		if ok {
+			//判断是否为调用超时
+			if statu.Code() == codes.DeadlineExceeded {
+				return nil, errors.New("请求超时")
+			}
+		}
+		return nil, err
+	}
+
+	return callRes.GetNormalTx(), nil
 }

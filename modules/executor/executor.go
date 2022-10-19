@@ -6,7 +6,6 @@ import (
 
 	"google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
-	"google.golang.org/grpc/credentials/insecure"
 	status "google.golang.org/grpc/status"
 
 	"github.com/GTLiSunnyi/cita-sdk-go/types"
@@ -18,18 +17,10 @@ type executorClient struct {
 	client *grpc.ClientConn
 }
 
-func NewClient(grpc_addr string) (Client, error) {
-	dialOpts := []grpc.DialOption{
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-	}
-	client, err := grpc.Dial(grpc_addr, dialOpts...)
-	if err != nil {
-		return nil, err
-	}
-
-	return executorClient{
+func NewClient(client *grpc.ClientConn) Client {
+	return &executorClient{
 		client: client,
-	}, nil
+	}
 }
 
 // params：填函数的参数，可以传入 big.Int\[]byte\string，例如：[]interface{}{big.NewInt(10), []byte{1}}
