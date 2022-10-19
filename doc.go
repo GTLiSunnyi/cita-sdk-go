@@ -1,9 +1,13 @@
 // A quick start:
 //
-//	cfg, err := sdk.NewClientConfig(nodeURI, chainID, options...)
-//	if err != nil {
-//		panic(err)
-//	}
+// cfg, err := sdktypes.NewClientConfig(GrpcAddress)
+// if err != nil {
+// 	t.Fatal(err.Error())
+// }
+
+// client, err := sdk.NewClient(cfg)
 //
-//	client := sdk.NewClient(cfg)
+//	if err != nil {
+//		t.Fatal(err.Error())
+//	}
 package sdk
