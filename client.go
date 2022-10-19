@@ -1,13 +1,14 @@
 package sdk
 
 import (
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+
 	"github.com/GTLiSunnyi/cita-sdk-go/modules/controller"
 	"github.com/GTLiSunnyi/cita-sdk-go/modules/executor"
 	"github.com/GTLiSunnyi/cita-sdk-go/modules/key"
 	"github.com/GTLiSunnyi/cita-sdk-go/modules/rivSpace"
 	sdktypes "github.com/GTLiSunnyi/cita-sdk-go/types"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 type Client struct {
