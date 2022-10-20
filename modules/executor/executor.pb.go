@@ -8,7 +8,6 @@ package executor
 
 import (
 	context "context"
-	proto "github.com/GTLiSunnyi/cita-sdk-go/protos/proto"
 	types "github.com/GTLiSunnyi/cita-sdk-go/types"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -193,7 +192,7 @@ var file_executor_proto_goTypes = []interface{}{
 	(*CallRequest)(nil),        // 0: executor.CallRequest
 	(*CallResponse)(nil),       // 1: executor.CallResponse
 	(*types.Block)(nil),        // 2: blockchain.Block
-	(*proto.HashResponse)(nil), // 3: common.HashResponse
+	(*types.HashResponse)(nil), // 3: common.HashResponse
 }
 var file_executor_proto_depIdxs = []int32{
 	2, // 0: executor.ExecutorService.Exec:input_type -> blockchain.Block
@@ -271,7 +270,7 @@ const _ = grpc.SupportPackageIsVersion6
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ExecutorServiceClient interface {
 	// exec a block return executed_block_hash
-	Exec(ctx context.Context, in *types.Block, opts ...grpc.CallOption) (*proto.HashResponse, error)
+	Exec(ctx context.Context, in *types.Block, opts ...grpc.CallOption) (*types.HashResponse, error)
 	Call(ctx context.Context, in *CallRequest, opts ...grpc.CallOption) (*CallResponse, error)
 }
 
@@ -283,8 +282,8 @@ func NewExecutorServiceClient(cc grpc.ClientConnInterface) ExecutorServiceClient
 	return &executorServiceClient{cc}
 }
 
-func (c *executorServiceClient) Exec(ctx context.Context, in *types.Block, opts ...grpc.CallOption) (*proto.HashResponse, error) {
-	out := new(proto.HashResponse)
+func (c *executorServiceClient) Exec(ctx context.Context, in *types.Block, opts ...grpc.CallOption) (*types.HashResponse, error) {
+	out := new(types.HashResponse)
 	err := c.cc.Invoke(ctx, "/executor.ExecutorService/Exec", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -304,7 +303,7 @@ func (c *executorServiceClient) Call(ctx context.Context, in *CallRequest, opts 
 // ExecutorServiceServer is the server API for ExecutorService service.
 type ExecutorServiceServer interface {
 	// exec a block return executed_block_hash
-	Exec(context.Context, *types.Block) (*proto.HashResponse, error)
+	Exec(context.Context, *types.Block) (*types.HashResponse, error)
 	Call(context.Context, *CallRequest) (*CallResponse, error)
 }
 
@@ -312,7 +311,7 @@ type ExecutorServiceServer interface {
 type UnimplementedExecutorServiceServer struct {
 }
 
-func (*UnimplementedExecutorServiceServer) Exec(context.Context, *types.Block) (*proto.HashResponse, error) {
+func (*UnimplementedExecutorServiceServer) Exec(context.Context, *types.Block) (*types.HashResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Exec not implemented")
 }
 func (*UnimplementedExecutorServiceServer) Call(context.Context, *CallRequest) (*CallResponse, error) {

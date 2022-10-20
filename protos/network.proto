@@ -4,7 +4,7 @@ import "common.proto";
 
 package network;
 
-option go_package = "github.com/GTLiSunnyi/cita-sdk-go/protos/proto";
+option go_package = "github.com/GTLiSunnyi/cita-sdk-go/types";
 
 message NetworkStatusResponse {
     uint64 peer_count = 1;

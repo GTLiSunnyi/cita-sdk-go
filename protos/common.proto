@@ -4,7 +4,7 @@ import "blockchain.proto";
 
 package common;
 
-option go_package = "github.com/GTLiSunnyi/cita-sdk-go/protos/proto";
+option go_package = "github.com/GTLiSunnyi/cita-sdk-go/types";
 
 message Empty {}
 

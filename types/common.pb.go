@@ -4,10 +4,9 @@
 // 	protoc        v3.19.1
 // source: common.proto
 
-package proto
+package types
 
 import (
-	types "github.com/GTLiSunnyi/cita-sdk-go/types"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -315,9 +314,9 @@ type BFTProposal struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	PreStateRoot []byte       `protobuf:"bytes,1,opt,name=pre_state_root,json=preStateRoot,proto3" json:"pre_state_root,omitempty"`
-	PreProof     []byte       `protobuf:"bytes,2,opt,name=pre_proof,json=preProof,proto3" json:"pre_proof,omitempty"`
-	Proposal     *types.Block `protobuf:"bytes,3,opt,name=proposal,proto3" json:"proposal,omitempty"`
+	PreStateRoot []byte `protobuf:"bytes,1,opt,name=pre_state_root,json=preStateRoot,proto3" json:"pre_state_root,omitempty"`
+	PreProof     []byte `protobuf:"bytes,2,opt,name=pre_proof,json=preProof,proto3" json:"pre_proof,omitempty"`
+	Proposal     *Block `protobuf:"bytes,3,opt,name=proposal,proto3" json:"proposal,omitempty"`
 }
 
 func (x *BFTProposal) Reset() {
@@ -366,7 +365,7 @@ func (x *BFTProposal) GetPreProof() []byte {
 	return nil
 }
 
-func (x *BFTProposal) GetProposal() *types.Block {
+func (x *BFTProposal) GetProposal() *Block {
 	if x != nil {
 		return x.Proposal
 	}
@@ -1002,10 +1001,10 @@ var file_common_proto_rawDesc = []byte{
 	0x61, 0x6c, 0x4e, 0x6f, 0x64, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x12, 0x26, 0x0a, 0x05, 0x6e, 0x6f,
 	0x64, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x10, 0x2e, 0x63, 0x6f, 0x6d, 0x6d,
 	0x6f, 0x6e, 0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x05, 0x6e, 0x6f, 0x64,
-	0x65, 0x73, 0x42, 0x30, 0x5a, 0x2e, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d,
+	0x65, 0x73, 0x42, 0x29, 0x5a, 0x27, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d,
 	0x2f, 0x47, 0x54, 0x4c, 0x69, 0x53, 0x75, 0x6e, 0x6e, 0x79, 0x69, 0x2f, 0x63, 0x69, 0x74, 0x61,
-	0x2d, 0x73, 0x64, 0x6b, 0x2d, 0x67, 0x6f, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x73, 0x2f, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x2d, 0x73, 0x64, 0x6b, 0x2d, 0x67, 0x6f, 0x2f, 0x74, 0x79, 0x70, 0x65, 0x73, 0x62, 0x06, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1039,7 +1038,7 @@ var file_common_proto_goTypes = []interface{}{
 	(*TotalNodeNetInfo)(nil),               // 14: common.TotalNodeNetInfo
 	(*NodeInfo)(nil),                       // 15: common.NodeInfo
 	(*TotalNodeInfo)(nil),                  // 16: common.TotalNodeInfo
-	(*types.Block)(nil),                    // 17: blockchain.Block
+	(*Block)(nil),                          // 17: blockchain.Block
 }
 var file_common_proto_depIdxs = []int32{
 	1,  // 0: common.Hashes.hashes:type_name -> common.Hash
@@ -1067,6 +1066,7 @@ func file_common_proto_init() {
 	if File_common_proto != nil {
 		return
 	}
+	file_blockchain_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_common_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Empty); i {

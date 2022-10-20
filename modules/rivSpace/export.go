@@ -5,7 +5,7 @@ import (
 )
 
 type Client interface {
-	Send(params map[string]interface{}, header types.GrpcRequestHeader) (*types.Receipt, error)
+	Send(params map[string]interface{}, header types.GrpcRequestHeader) (*types.MyReceipt, error)
 	CreateAccount(name, appId, appSecret string, header types.GrpcRequestHeader) (string, error)
-	GetReceipt(tx_hash string, header types.GrpcRequestHeader) (*types.Receipt, error)
+	GetReceipt(tx_hash string, header types.GrpcRequestHeader) (*types.MyReceipt, error)
 }

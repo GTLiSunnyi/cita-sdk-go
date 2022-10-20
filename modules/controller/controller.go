@@ -14,7 +14,6 @@ import (
 	grpcproto "google.golang.org/protobuf/proto"
 
 	"github.com/GTLiSunnyi/cita-sdk-go/crypto/types"
-	"github.com/GTLiSunnyi/cita-sdk-go/protos/proto"
 	sdktypes "github.com/GTLiSunnyi/cita-sdk-go/types"
 	"github.com/GTLiSunnyi/cita-sdk-go/utils"
 )
@@ -60,7 +59,7 @@ func (client controllerClient) GetSystemConfig(header sdktypes.GrpcRequestHeader
 	ctx, cancel := sdktypes.MakeGrpcRequestCtx(header)
 	defer cancel()
 
-	callRes, err := NewRPCServiceClient(client.client).GetSystemConfig(ctx, &proto.Empty{})
+	callRes, err := NewRPCServiceClient(client.client).GetSystemConfig(ctx, &sdktypes.Empty{})
 	if err != nil {
 		//获取错误状态
 		statu, ok := status.FromError(err)
@@ -225,7 +224,7 @@ func (client controllerClient) GetTransaction(header sdktypes.GrpcRequestHeader,
 	ctx, cancel := sdktypes.MakeGrpcRequestCtx(header)
 	defer cancel()
 
-	callRes, err := NewRPCServiceClient(client.client).GetTransaction(ctx, &proto.Hash{Hash: tx_hash})
+	callRes, err := NewRPCServiceClient(client.client).GetTransaction(ctx, &sdktypes.Hash{Hash: tx_hash})
 	if err != nil {
 		//获取错误状态
 		statu, ok := status.FromError(err)

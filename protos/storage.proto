@@ -4,7 +4,7 @@ import "common.proto";
 
 package storage;
 
-option go_package = "github.com/GTLiSunnyi/cita-sdk-go/protos/proto";
+option go_package = "github.com/GTLiSunnyi/cita-sdk-go/types";
 
 enum Regions {
     GLOBAL = 0;

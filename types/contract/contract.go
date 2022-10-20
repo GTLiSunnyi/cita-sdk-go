@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
-	"github.com/ethereum/go-ethereum/crypto"
 
 	"github.com/GTLiSunnyi/cita-sdk-go/types"
 )
@@ -36,12 +35,10 @@ func NewContract(address string, abiPath string) (Contract, error) {
 	}, nil
 }
 
-func (contract Contract) GetEvent(receipt *types.Receipt, funcSignature, eventName string) ([]byte, error) {
-	topicHash := crypto.Keccak256Hash([]byte(funcSignature)).Hex()
-
+func (contract Contract) GetEvent(receipt *types.MyReceipt, eventName string) ([]byte, error) {
 	var data = make(map[string]interface{})
-	for _, log := range receipt.Data.Logs {
-		if log.Topics[0] != topicHash {
+	for _, log := range receipt.Logs {
+		if log.Topics[0] != contract.Abi.Events[eventName].ID.String() {
 			continue
 		}
 

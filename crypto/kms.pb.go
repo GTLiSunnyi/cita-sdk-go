@@ -8,7 +8,6 @@ package crypto
 
 import (
 	context "context"
-	proto "github.com/GTLiSunnyi/cita-sdk-go/protos/proto"
 	types "github.com/GTLiSunnyi/cita-sdk-go/types"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -31,7 +30,7 @@ type GetCryptoInfoResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Status       *proto.StatusCode `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	Status       *types.StatusCode `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
 	Name         string            `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	HashLen      uint32            `protobuf:"varint,3,opt,name=hash_len,json=hashLen,proto3" json:"hash_len,omitempty"`
 	SignatureLen uint32            `protobuf:"varint,4,opt,name=signature_len,json=signatureLen,proto3" json:"signature_len,omitempty"`
@@ -70,7 +69,7 @@ func (*GetCryptoInfoResponse) Descriptor() ([]byte, []int) {
 	return file_kms_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *GetCryptoInfoResponse) GetStatus() *proto.StatusCode {
+func (x *GetCryptoInfoResponse) GetStatus() *types.StatusCode {
 	if x != nil {
 		return x.Status
 	}
@@ -369,7 +368,7 @@ type SignMessageResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Status    *proto.StatusCode `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	Status    *types.StatusCode `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
 	Signature []byte            `protobuf:"bytes,2,opt,name=signature,proto3" json:"signature,omitempty"`
 }
 
@@ -405,7 +404,7 @@ func (*SignMessageResponse) Descriptor() ([]byte, []int) {
 	return file_kms_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *SignMessageResponse) GetStatus() *proto.StatusCode {
+func (x *SignMessageResponse) GetStatus() *types.StatusCode {
 	if x != nil {
 		return x.Status
 	}
@@ -479,7 +478,7 @@ type RecoverSignatureResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Status  *proto.StatusCode `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	Status  *types.StatusCode `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
 	Address []byte            `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
 }
 
@@ -515,7 +514,7 @@ func (*RecoverSignatureResponse) Descriptor() ([]byte, []int) {
 	return file_kms_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *RecoverSignatureResponse) GetStatus() *proto.StatusCode {
+func (x *RecoverSignatureResponse) GetStatus() *types.StatusCode {
 	if x != nil {
 		return x.Status
 	}
@@ -642,10 +641,10 @@ var file_kms_proto_goTypes = []interface{}{
 	(*SignMessageResponse)(nil),      // 6: kms.SignMessageResponse
 	(*RecoverSignatureRequest)(nil),  // 7: kms.RecoverSignatureRequest
 	(*RecoverSignatureResponse)(nil), // 8: kms.RecoverSignatureResponse
-	(*proto.StatusCode)(nil),         // 9: common.StatusCode
-	(*proto.Empty)(nil),              // 10: common.Empty
+	(*types.StatusCode)(nil),         // 9: common.StatusCode
+	(*types.Empty)(nil),              // 10: common.Empty
 	(*types.RawTransactions)(nil),    // 11: blockchain.RawTransactions
-	(*proto.HashResponse)(nil),       // 12: common.HashResponse
+	(*types.HashResponse)(nil),       // 12: common.HashResponse
 }
 var file_kms_proto_depIdxs = []int32{
 	9,  // 0: kms.GetCryptoInfoResponse.status:type_name -> common.StatusCode
@@ -820,19 +819,19 @@ const _ = grpc.SupportPackageIsVersion6
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type KmsServiceClient interface {
 	// Get crypto info
-	GetCryptoInfo(ctx context.Context, in *proto.Empty, opts ...grpc.CallOption) (*GetCryptoInfoResponse, error)
+	GetCryptoInfo(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*GetCryptoInfoResponse, error)
 	// Generate a KeyPair
 	GenerateKeyPair(ctx context.Context, in *GenerateKeyPairRequest, opts ...grpc.CallOption) (*GenerateKeyPairResponse, error)
 	// Hash data
-	HashData(ctx context.Context, in *HashDataRequest, opts ...grpc.CallOption) (*proto.HashResponse, error)
+	HashData(ctx context.Context, in *HashDataRequest, opts ...grpc.CallOption) (*types.HashResponse, error)
 	// Verify hash of data
-	VerifyDataHash(ctx context.Context, in *VerifyDataHashRequest, opts ...grpc.CallOption) (*proto.StatusCode, error)
+	VerifyDataHash(ctx context.Context, in *VerifyDataHashRequest, opts ...grpc.CallOption) (*types.StatusCode, error)
 	// Sign a message
 	SignMessage(ctx context.Context, in *SignMessageRequest, opts ...grpc.CallOption) (*SignMessageResponse, error)
 	// Recover signature
 	RecoverSignature(ctx context.Context, in *RecoverSignatureRequest, opts ...grpc.CallOption) (*RecoverSignatureResponse, error)
 	// check transactions
-	CheckTransactions(ctx context.Context, in *types.RawTransactions, opts ...grpc.CallOption) (*proto.StatusCode, error)
+	CheckTransactions(ctx context.Context, in *types.RawTransactions, opts ...grpc.CallOption) (*types.StatusCode, error)
 }
 
 type kmsServiceClient struct {
@@ -843,7 +842,7 @@ func NewKmsServiceClient(cc grpc.ClientConnInterface) KmsServiceClient {
 	return &kmsServiceClient{cc}
 }
 
-func (c *kmsServiceClient) GetCryptoInfo(ctx context.Context, in *proto.Empty, opts ...grpc.CallOption) (*GetCryptoInfoResponse, error) {
+func (c *kmsServiceClient) GetCryptoInfo(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*GetCryptoInfoResponse, error) {
 	out := new(GetCryptoInfoResponse)
 	err := c.cc.Invoke(ctx, "/kms.KmsService/GetCryptoInfo", in, out, opts...)
 	if err != nil {
@@ -861,8 +860,8 @@ func (c *kmsServiceClient) GenerateKeyPair(ctx context.Context, in *GenerateKeyP
 	return out, nil
 }
 
-func (c *kmsServiceClient) HashData(ctx context.Context, in *HashDataRequest, opts ...grpc.CallOption) (*proto.HashResponse, error) {
-	out := new(proto.HashResponse)
+func (c *kmsServiceClient) HashData(ctx context.Context, in *HashDataRequest, opts ...grpc.CallOption) (*types.HashResponse, error) {
+	out := new(types.HashResponse)
 	err := c.cc.Invoke(ctx, "/kms.KmsService/HashData", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -870,8 +869,8 @@ func (c *kmsServiceClient) HashData(ctx context.Context, in *HashDataRequest, op
 	return out, nil
 }
 
-func (c *kmsServiceClient) VerifyDataHash(ctx context.Context, in *VerifyDataHashRequest, opts ...grpc.CallOption) (*proto.StatusCode, error) {
-	out := new(proto.StatusCode)
+func (c *kmsServiceClient) VerifyDataHash(ctx context.Context, in *VerifyDataHashRequest, opts ...grpc.CallOption) (*types.StatusCode, error) {
+	out := new(types.StatusCode)
 	err := c.cc.Invoke(ctx, "/kms.KmsService/VerifyDataHash", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -897,8 +896,8 @@ func (c *kmsServiceClient) RecoverSignature(ctx context.Context, in *RecoverSign
 	return out, nil
 }
 
-func (c *kmsServiceClient) CheckTransactions(ctx context.Context, in *types.RawTransactions, opts ...grpc.CallOption) (*proto.StatusCode, error) {
-	out := new(proto.StatusCode)
+func (c *kmsServiceClient) CheckTransactions(ctx context.Context, in *types.RawTransactions, opts ...grpc.CallOption) (*types.StatusCode, error) {
+	out := new(types.StatusCode)
 	err := c.cc.Invoke(ctx, "/kms.KmsService/CheckTransactions", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -909,35 +908,35 @@ func (c *kmsServiceClient) CheckTransactions(ctx context.Context, in *types.RawT
 // KmsServiceServer is the server API for KmsService service.
 type KmsServiceServer interface {
 	// Get crypto info
-	GetCryptoInfo(context.Context, *proto.Empty) (*GetCryptoInfoResponse, error)
+	GetCryptoInfo(context.Context, *types.Empty) (*GetCryptoInfoResponse, error)
 	// Generate a KeyPair
 	GenerateKeyPair(context.Context, *GenerateKeyPairRequest) (*GenerateKeyPairResponse, error)
 	// Hash data
-	HashData(context.Context, *HashDataRequest) (*proto.HashResponse, error)
+	HashData(context.Context, *HashDataRequest) (*types.HashResponse, error)
 	// Verify hash of data
-	VerifyDataHash(context.Context, *VerifyDataHashRequest) (*proto.StatusCode, error)
+	VerifyDataHash(context.Context, *VerifyDataHashRequest) (*types.StatusCode, error)
 	// Sign a message
 	SignMessage(context.Context, *SignMessageRequest) (*SignMessageResponse, error)
 	// Recover signature
 	RecoverSignature(context.Context, *RecoverSignatureRequest) (*RecoverSignatureResponse, error)
 	// check transactions
-	CheckTransactions(context.Context, *types.RawTransactions) (*proto.StatusCode, error)
+	CheckTransactions(context.Context, *types.RawTransactions) (*types.StatusCode, error)
 }
 
 // UnimplementedKmsServiceServer can be embedded to have forward compatible implementations.
 type UnimplementedKmsServiceServer struct {
 }
 
-func (*UnimplementedKmsServiceServer) GetCryptoInfo(context.Context, *proto.Empty) (*GetCryptoInfoResponse, error) {
+func (*UnimplementedKmsServiceServer) GetCryptoInfo(context.Context, *types.Empty) (*GetCryptoInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCryptoInfo not implemented")
 }
 func (*UnimplementedKmsServiceServer) GenerateKeyPair(context.Context, *GenerateKeyPairRequest) (*GenerateKeyPairResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GenerateKeyPair not implemented")
 }
-func (*UnimplementedKmsServiceServer) HashData(context.Context, *HashDataRequest) (*proto.HashResponse, error) {
+func (*UnimplementedKmsServiceServer) HashData(context.Context, *HashDataRequest) (*types.HashResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HashData not implemented")
 }
-func (*UnimplementedKmsServiceServer) VerifyDataHash(context.Context, *VerifyDataHashRequest) (*proto.StatusCode, error) {
+func (*UnimplementedKmsServiceServer) VerifyDataHash(context.Context, *VerifyDataHashRequest) (*types.StatusCode, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyDataHash not implemented")
 }
 func (*UnimplementedKmsServiceServer) SignMessage(context.Context, *SignMessageRequest) (*SignMessageResponse, error) {
@@ -946,7 +945,7 @@ func (*UnimplementedKmsServiceServer) SignMessage(context.Context, *SignMessageR
 func (*UnimplementedKmsServiceServer) RecoverSignature(context.Context, *RecoverSignatureRequest) (*RecoverSignatureResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RecoverSignature not implemented")
 }
-func (*UnimplementedKmsServiceServer) CheckTransactions(context.Context, *types.RawTransactions) (*proto.StatusCode, error) {
+func (*UnimplementedKmsServiceServer) CheckTransactions(context.Context, *types.RawTransactions) (*types.StatusCode, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckTransactions not implemented")
 }
 
@@ -955,7 +954,7 @@ func RegisterKmsServiceServer(s *grpc.Server, srv KmsServiceServer) {
 }
 
 func _KmsService_GetCryptoInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(proto.Empty)
+	in := new(types.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -967,7 +966,7 @@ func _KmsService_GetCryptoInfo_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: "/kms.KmsService/GetCryptoInfo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KmsServiceServer).GetCryptoInfo(ctx, req.(*proto.Empty))
+		return srv.(KmsServiceServer).GetCryptoInfo(ctx, req.(*types.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }

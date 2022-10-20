@@ -22,7 +22,7 @@ func NewClient(rivSpaceAddress types.RivSpaceAddress) Client {
 	}
 }
 
-func (client rivSpaceClient) Send(params map[string]interface{}, header types.GrpcRequestHeader) (*types.Receipt, error) {
+func (client rivSpaceClient) Send(params map[string]interface{}, header types.GrpcRequestHeader) (*types.MyReceipt, error) {
 	data, err := SendRivSpaceRequest(params, client.RunAddress, header)
 	if err != nil {
 		return nil, err
@@ -33,12 +33,11 @@ func (client rivSpaceClient) Send(params map[string]interface{}, header types.Gr
 	if err != nil {
 		return nil, err
 	}
-
 	if res.Code != 200 {
 		return nil, errors.New(res.Message)
 	}
 
-	var receipt = &types.Receipt{}
+	var receipt = &types.MyReceipt{}
 	ch := make(chan error, 1)
 	go func() {
 		var err error
@@ -79,7 +78,7 @@ func (client rivSpaceClient) CreateAccount(name, appId, appSecret string, header
 	return res.Data.Address, nil
 }
 
-func (client rivSpaceClient) GetReceipt(tx_hash string, header types.GrpcRequestHeader) (*types.Receipt, error) {
+func (client rivSpaceClient) GetReceipt(tx_hash string, header types.GrpcRequestHeader) (*types.MyReceipt, error) {
 	params := map[string]interface{}{
 		"txHash": tx_hash,
 	}
@@ -89,20 +88,20 @@ func (client rivSpaceClient) GetReceipt(tx_hash string, header types.GrpcRequest
 		return nil, err
 	}
 
-	var receipt = &types.Receipt{}
-	err = json.Unmarshal(data, &receipt)
+	var receiptWrap = &types.ReceiptWrap{}
+	err = json.Unmarshal(data, &receiptWrap)
 	if err != nil {
-		return receipt, err
+		return nil, err
 	}
 
 	// 交易没有上链的话，间隔 继续查询
-	if receipt.Data.TransactionHash == "" {
+	if receiptWrap.Data.TransactionHash == "" {
 		time.Sleep(time.Duration(GetReceiptInterval) * time.Millisecond)
 		return client.GetReceipt(tx_hash, header)
 	}
 
-	if receipt.Data.ErrorMessage != "" {
-		return receipt, errors.New(receipt.Data.ErrorMessage)
+	if receiptWrap.Data.ErrorMessage != "" {
+		return nil, errors.New(receiptWrap.Data.ErrorMessage)
 	}
-	return receipt, nil
+	return &receiptWrap.Data, nil
 }

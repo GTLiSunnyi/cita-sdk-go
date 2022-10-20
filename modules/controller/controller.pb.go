@@ -8,7 +8,6 @@ package controller
 
 import (
 	context "context"
-	proto "github.com/GTLiSunnyi/cita-sdk-go/protos/proto"
 	types "github.com/GTLiSunnyi/cita-sdk-go/types"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -543,17 +542,17 @@ var file_controller_proto_goTypes = []interface{}{
 	(*TransactionIndex)(nil),                     // 5: controller.TransactionIndex
 	(*types.RawTransaction)(nil),                 // 6: blockchain.RawTransaction
 	(*types.RawTransactions)(nil),                // 7: blockchain.RawTransactions
-	(*proto.Hash)(nil),                           // 8: common.Hash
-	(*proto.Empty)(nil),                          // 9: common.Empty
-	(*proto.NodeNetInfo)(nil),                    // 10: common.NodeNetInfo
-	(*proto.Proposal)(nil),                       // 11: common.Proposal
-	(*proto.ProposalWithProof)(nil),              // 12: common.ProposalWithProof
-	(*proto.Hashes)(nil),                         // 13: common.Hashes
+	(*types.Hash)(nil),                           // 8: common.Hash
+	(*types.Empty)(nil),                          // 9: common.Empty
+	(*types.NodeNetInfo)(nil),                    // 10: common.NodeNetInfo
+	(*types.Proposal)(nil),                       // 11: common.Proposal
+	(*types.ProposalWithProof)(nil),              // 12: common.ProposalWithProof
+	(*types.Hashes)(nil),                         // 13: common.Hashes
 	(*types.CompactBlock)(nil),                   // 14: blockchain.CompactBlock
-	(*proto.StatusCode)(nil),                     // 15: common.StatusCode
-	(*proto.TotalNodeInfo)(nil),                  // 16: common.TotalNodeInfo
-	(*proto.ProposalResponse)(nil),               // 17: common.ProposalResponse
-	(*proto.ConsensusConfigurationResponse)(nil), // 18: common.ConsensusConfigurationResponse
+	(*types.StatusCode)(nil),                     // 15: common.StatusCode
+	(*types.TotalNodeInfo)(nil),                  // 16: common.TotalNodeInfo
+	(*types.ProposalResponse)(nil),               // 17: common.ProposalResponse
+	(*types.ConsensusConfigurationResponse)(nil), // 18: common.ConsensusConfigurationResponse
 }
 var file_controller_proto_depIdxs = []int32{
 	0,  // 0: controller.RPCService.GetBlockNumber:input_type -> controller.Flag
@@ -711,21 +710,21 @@ type RPCServiceClient interface {
 	// flag means latest or pending.
 	// true means pending, false means latest.
 	GetBlockNumber(ctx context.Context, in *Flag, opts ...grpc.CallOption) (*BlockNumber, error)
-	SendRawTransaction(ctx context.Context, in *types.RawTransaction, opts ...grpc.CallOption) (*proto.Hash, error)
-	SendRawTransactions(ctx context.Context, in *types.RawTransactions, opts ...grpc.CallOption) (*proto.Hashes, error)
-	GetBlockByHash(ctx context.Context, in *proto.Hash, opts ...grpc.CallOption) (*types.CompactBlock, error)
+	SendRawTransaction(ctx context.Context, in *types.RawTransaction, opts ...grpc.CallOption) (*types.Hash, error)
+	SendRawTransactions(ctx context.Context, in *types.RawTransactions, opts ...grpc.CallOption) (*types.Hashes, error)
+	GetBlockByHash(ctx context.Context, in *types.Hash, opts ...grpc.CallOption) (*types.CompactBlock, error)
 	GetBlockByNumber(ctx context.Context, in *BlockNumber, opts ...grpc.CallOption) (*types.CompactBlock, error)
-	GetTransaction(ctx context.Context, in *proto.Hash, opts ...grpc.CallOption) (*types.RawTransaction, error)
-	GetSystemConfig(ctx context.Context, in *proto.Empty, opts ...grpc.CallOption) (*SystemConfig, error)
-	GetVersion(ctx context.Context, in *proto.Empty, opts ...grpc.CallOption) (*SoftwareVersion, error)
-	GetBlockHash(ctx context.Context, in *BlockNumber, opts ...grpc.CallOption) (*proto.Hash, error)
-	GetTransactionBlockNumber(ctx context.Context, in *proto.Hash, opts ...grpc.CallOption) (*BlockNumber, error)
-	GetTransactionIndex(ctx context.Context, in *proto.Hash, opts ...grpc.CallOption) (*TransactionIndex, error)
-	GetPeerCount(ctx context.Context, in *proto.Empty, opts ...grpc.CallOption) (*PeerCount, error)
+	GetTransaction(ctx context.Context, in *types.Hash, opts ...grpc.CallOption) (*types.RawTransaction, error)
+	GetSystemConfig(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*SystemConfig, error)
+	GetVersion(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*SoftwareVersion, error)
+	GetBlockHash(ctx context.Context, in *BlockNumber, opts ...grpc.CallOption) (*types.Hash, error)
+	GetTransactionBlockNumber(ctx context.Context, in *types.Hash, opts ...grpc.CallOption) (*BlockNumber, error)
+	GetTransactionIndex(ctx context.Context, in *types.Hash, opts ...grpc.CallOption) (*TransactionIndex, error)
+	GetPeerCount(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*PeerCount, error)
 	// add new node
-	AddNode(ctx context.Context, in *proto.NodeNetInfo, opts ...grpc.CallOption) (*proto.StatusCode, error)
+	AddNode(ctx context.Context, in *types.NodeNetInfo, opts ...grpc.CallOption) (*types.StatusCode, error)
 	// get peers info
-	GetPeersInfo(ctx context.Context, in *proto.Empty, opts ...grpc.CallOption) (*proto.TotalNodeInfo, error)
+	GetPeersInfo(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*types.TotalNodeInfo, error)
 }
 
 type rPCServiceClient struct {
@@ -745,8 +744,8 @@ func (c *rPCServiceClient) GetBlockNumber(ctx context.Context, in *Flag, opts ..
 	return out, nil
 }
 
-func (c *rPCServiceClient) SendRawTransaction(ctx context.Context, in *types.RawTransaction, opts ...grpc.CallOption) (*proto.Hash, error) {
-	out := new(proto.Hash)
+func (c *rPCServiceClient) SendRawTransaction(ctx context.Context, in *types.RawTransaction, opts ...grpc.CallOption) (*types.Hash, error) {
+	out := new(types.Hash)
 	err := c.cc.Invoke(ctx, "/controller.RPCService/SendRawTransaction", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -754,8 +753,8 @@ func (c *rPCServiceClient) SendRawTransaction(ctx context.Context, in *types.Raw
 	return out, nil
 }
 
-func (c *rPCServiceClient) SendRawTransactions(ctx context.Context, in *types.RawTransactions, opts ...grpc.CallOption) (*proto.Hashes, error) {
-	out := new(proto.Hashes)
+func (c *rPCServiceClient) SendRawTransactions(ctx context.Context, in *types.RawTransactions, opts ...grpc.CallOption) (*types.Hashes, error) {
+	out := new(types.Hashes)
 	err := c.cc.Invoke(ctx, "/controller.RPCService/SendRawTransactions", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -763,7 +762,7 @@ func (c *rPCServiceClient) SendRawTransactions(ctx context.Context, in *types.Ra
 	return out, nil
 }
 
-func (c *rPCServiceClient) GetBlockByHash(ctx context.Context, in *proto.Hash, opts ...grpc.CallOption) (*types.CompactBlock, error) {
+func (c *rPCServiceClient) GetBlockByHash(ctx context.Context, in *types.Hash, opts ...grpc.CallOption) (*types.CompactBlock, error) {
 	out := new(types.CompactBlock)
 	err := c.cc.Invoke(ctx, "/controller.RPCService/GetBlockByHash", in, out, opts...)
 	if err != nil {
@@ -781,7 +780,7 @@ func (c *rPCServiceClient) GetBlockByNumber(ctx context.Context, in *BlockNumber
 	return out, nil
 }
 
-func (c *rPCServiceClient) GetTransaction(ctx context.Context, in *proto.Hash, opts ...grpc.CallOption) (*types.RawTransaction, error) {
+func (c *rPCServiceClient) GetTransaction(ctx context.Context, in *types.Hash, opts ...grpc.CallOption) (*types.RawTransaction, error) {
 	out := new(types.RawTransaction)
 	err := c.cc.Invoke(ctx, "/controller.RPCService/GetTransaction", in, out, opts...)
 	if err != nil {
@@ -790,7 +789,7 @@ func (c *rPCServiceClient) GetTransaction(ctx context.Context, in *proto.Hash, o
 	return out, nil
 }
 
-func (c *rPCServiceClient) GetSystemConfig(ctx context.Context, in *proto.Empty, opts ...grpc.CallOption) (*SystemConfig, error) {
+func (c *rPCServiceClient) GetSystemConfig(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*SystemConfig, error) {
 	out := new(SystemConfig)
 	err := c.cc.Invoke(ctx, "/controller.RPCService/GetSystemConfig", in, out, opts...)
 	if err != nil {
@@ -799,7 +798,7 @@ func (c *rPCServiceClient) GetSystemConfig(ctx context.Context, in *proto.Empty,
 	return out, nil
 }
 
-func (c *rPCServiceClient) GetVersion(ctx context.Context, in *proto.Empty, opts ...grpc.CallOption) (*SoftwareVersion, error) {
+func (c *rPCServiceClient) GetVersion(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*SoftwareVersion, error) {
 	out := new(SoftwareVersion)
 	err := c.cc.Invoke(ctx, "/controller.RPCService/GetVersion", in, out, opts...)
 	if err != nil {
@@ -808,8 +807,8 @@ func (c *rPCServiceClient) GetVersion(ctx context.Context, in *proto.Empty, opts
 	return out, nil
 }
 
-func (c *rPCServiceClient) GetBlockHash(ctx context.Context, in *BlockNumber, opts ...grpc.CallOption) (*proto.Hash, error) {
-	out := new(proto.Hash)
+func (c *rPCServiceClient) GetBlockHash(ctx context.Context, in *BlockNumber, opts ...grpc.CallOption) (*types.Hash, error) {
+	out := new(types.Hash)
 	err := c.cc.Invoke(ctx, "/controller.RPCService/GetBlockHash", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -817,7 +816,7 @@ func (c *rPCServiceClient) GetBlockHash(ctx context.Context, in *BlockNumber, op
 	return out, nil
 }
 
-func (c *rPCServiceClient) GetTransactionBlockNumber(ctx context.Context, in *proto.Hash, opts ...grpc.CallOption) (*BlockNumber, error) {
+func (c *rPCServiceClient) GetTransactionBlockNumber(ctx context.Context, in *types.Hash, opts ...grpc.CallOption) (*BlockNumber, error) {
 	out := new(BlockNumber)
 	err := c.cc.Invoke(ctx, "/controller.RPCService/GetTransactionBlockNumber", in, out, opts...)
 	if err != nil {
@@ -826,7 +825,7 @@ func (c *rPCServiceClient) GetTransactionBlockNumber(ctx context.Context, in *pr
 	return out, nil
 }
 
-func (c *rPCServiceClient) GetTransactionIndex(ctx context.Context, in *proto.Hash, opts ...grpc.CallOption) (*TransactionIndex, error) {
+func (c *rPCServiceClient) GetTransactionIndex(ctx context.Context, in *types.Hash, opts ...grpc.CallOption) (*TransactionIndex, error) {
 	out := new(TransactionIndex)
 	err := c.cc.Invoke(ctx, "/controller.RPCService/GetTransactionIndex", in, out, opts...)
 	if err != nil {
@@ -835,7 +834,7 @@ func (c *rPCServiceClient) GetTransactionIndex(ctx context.Context, in *proto.Ha
 	return out, nil
 }
 
-func (c *rPCServiceClient) GetPeerCount(ctx context.Context, in *proto.Empty, opts ...grpc.CallOption) (*PeerCount, error) {
+func (c *rPCServiceClient) GetPeerCount(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*PeerCount, error) {
 	out := new(PeerCount)
 	err := c.cc.Invoke(ctx, "/controller.RPCService/GetPeerCount", in, out, opts...)
 	if err != nil {
@@ -844,8 +843,8 @@ func (c *rPCServiceClient) GetPeerCount(ctx context.Context, in *proto.Empty, op
 	return out, nil
 }
 
-func (c *rPCServiceClient) AddNode(ctx context.Context, in *proto.NodeNetInfo, opts ...grpc.CallOption) (*proto.StatusCode, error) {
-	out := new(proto.StatusCode)
+func (c *rPCServiceClient) AddNode(ctx context.Context, in *types.NodeNetInfo, opts ...grpc.CallOption) (*types.StatusCode, error) {
+	out := new(types.StatusCode)
 	err := c.cc.Invoke(ctx, "/controller.RPCService/AddNode", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -853,8 +852,8 @@ func (c *rPCServiceClient) AddNode(ctx context.Context, in *proto.NodeNetInfo, o
 	return out, nil
 }
 
-func (c *rPCServiceClient) GetPeersInfo(ctx context.Context, in *proto.Empty, opts ...grpc.CallOption) (*proto.TotalNodeInfo, error) {
-	out := new(proto.TotalNodeInfo)
+func (c *rPCServiceClient) GetPeersInfo(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*types.TotalNodeInfo, error) {
+	out := new(types.TotalNodeInfo)
 	err := c.cc.Invoke(ctx, "/controller.RPCService/GetPeersInfo", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -867,21 +866,21 @@ type RPCServiceServer interface {
 	// flag means latest or pending.
 	// true means pending, false means latest.
 	GetBlockNumber(context.Context, *Flag) (*BlockNumber, error)
-	SendRawTransaction(context.Context, *types.RawTransaction) (*proto.Hash, error)
-	SendRawTransactions(context.Context, *types.RawTransactions) (*proto.Hashes, error)
-	GetBlockByHash(context.Context, *proto.Hash) (*types.CompactBlock, error)
+	SendRawTransaction(context.Context, *types.RawTransaction) (*types.Hash, error)
+	SendRawTransactions(context.Context, *types.RawTransactions) (*types.Hashes, error)
+	GetBlockByHash(context.Context, *types.Hash) (*types.CompactBlock, error)
 	GetBlockByNumber(context.Context, *BlockNumber) (*types.CompactBlock, error)
-	GetTransaction(context.Context, *proto.Hash) (*types.RawTransaction, error)
-	GetSystemConfig(context.Context, *proto.Empty) (*SystemConfig, error)
-	GetVersion(context.Context, *proto.Empty) (*SoftwareVersion, error)
-	GetBlockHash(context.Context, *BlockNumber) (*proto.Hash, error)
-	GetTransactionBlockNumber(context.Context, *proto.Hash) (*BlockNumber, error)
-	GetTransactionIndex(context.Context, *proto.Hash) (*TransactionIndex, error)
-	GetPeerCount(context.Context, *proto.Empty) (*PeerCount, error)
+	GetTransaction(context.Context, *types.Hash) (*types.RawTransaction, error)
+	GetSystemConfig(context.Context, *types.Empty) (*SystemConfig, error)
+	GetVersion(context.Context, *types.Empty) (*SoftwareVersion, error)
+	GetBlockHash(context.Context, *BlockNumber) (*types.Hash, error)
+	GetTransactionBlockNumber(context.Context, *types.Hash) (*BlockNumber, error)
+	GetTransactionIndex(context.Context, *types.Hash) (*TransactionIndex, error)
+	GetPeerCount(context.Context, *types.Empty) (*PeerCount, error)
 	// add new node
-	AddNode(context.Context, *proto.NodeNetInfo) (*proto.StatusCode, error)
+	AddNode(context.Context, *types.NodeNetInfo) (*types.StatusCode, error)
 	// get peers info
-	GetPeersInfo(context.Context, *proto.Empty) (*proto.TotalNodeInfo, error)
+	GetPeersInfo(context.Context, *types.Empty) (*types.TotalNodeInfo, error)
 }
 
 // UnimplementedRPCServiceServer can be embedded to have forward compatible implementations.
@@ -891,43 +890,43 @@ type UnimplementedRPCServiceServer struct {
 func (*UnimplementedRPCServiceServer) GetBlockNumber(context.Context, *Flag) (*BlockNumber, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBlockNumber not implemented")
 }
-func (*UnimplementedRPCServiceServer) SendRawTransaction(context.Context, *types.RawTransaction) (*proto.Hash, error) {
+func (*UnimplementedRPCServiceServer) SendRawTransaction(context.Context, *types.RawTransaction) (*types.Hash, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendRawTransaction not implemented")
 }
-func (*UnimplementedRPCServiceServer) SendRawTransactions(context.Context, *types.RawTransactions) (*proto.Hashes, error) {
+func (*UnimplementedRPCServiceServer) SendRawTransactions(context.Context, *types.RawTransactions) (*types.Hashes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendRawTransactions not implemented")
 }
-func (*UnimplementedRPCServiceServer) GetBlockByHash(context.Context, *proto.Hash) (*types.CompactBlock, error) {
+func (*UnimplementedRPCServiceServer) GetBlockByHash(context.Context, *types.Hash) (*types.CompactBlock, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBlockByHash not implemented")
 }
 func (*UnimplementedRPCServiceServer) GetBlockByNumber(context.Context, *BlockNumber) (*types.CompactBlock, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBlockByNumber not implemented")
 }
-func (*UnimplementedRPCServiceServer) GetTransaction(context.Context, *proto.Hash) (*types.RawTransaction, error) {
+func (*UnimplementedRPCServiceServer) GetTransaction(context.Context, *types.Hash) (*types.RawTransaction, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransaction not implemented")
 }
-func (*UnimplementedRPCServiceServer) GetSystemConfig(context.Context, *proto.Empty) (*SystemConfig, error) {
+func (*UnimplementedRPCServiceServer) GetSystemConfig(context.Context, *types.Empty) (*SystemConfig, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSystemConfig not implemented")
 }
-func (*UnimplementedRPCServiceServer) GetVersion(context.Context, *proto.Empty) (*SoftwareVersion, error) {
+func (*UnimplementedRPCServiceServer) GetVersion(context.Context, *types.Empty) (*SoftwareVersion, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVersion not implemented")
 }
-func (*UnimplementedRPCServiceServer) GetBlockHash(context.Context, *BlockNumber) (*proto.Hash, error) {
+func (*UnimplementedRPCServiceServer) GetBlockHash(context.Context, *BlockNumber) (*types.Hash, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBlockHash not implemented")
 }
-func (*UnimplementedRPCServiceServer) GetTransactionBlockNumber(context.Context, *proto.Hash) (*BlockNumber, error) {
+func (*UnimplementedRPCServiceServer) GetTransactionBlockNumber(context.Context, *types.Hash) (*BlockNumber, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionBlockNumber not implemented")
 }
-func (*UnimplementedRPCServiceServer) GetTransactionIndex(context.Context, *proto.Hash) (*TransactionIndex, error) {
+func (*UnimplementedRPCServiceServer) GetTransactionIndex(context.Context, *types.Hash) (*TransactionIndex, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionIndex not implemented")
 }
-func (*UnimplementedRPCServiceServer) GetPeerCount(context.Context, *proto.Empty) (*PeerCount, error) {
+func (*UnimplementedRPCServiceServer) GetPeerCount(context.Context, *types.Empty) (*PeerCount, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPeerCount not implemented")
 }
-func (*UnimplementedRPCServiceServer) AddNode(context.Context, *proto.NodeNetInfo) (*proto.StatusCode, error) {
+func (*UnimplementedRPCServiceServer) AddNode(context.Context, *types.NodeNetInfo) (*types.StatusCode, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddNode not implemented")
 }
-func (*UnimplementedRPCServiceServer) GetPeersInfo(context.Context, *proto.Empty) (*proto.TotalNodeInfo, error) {
+func (*UnimplementedRPCServiceServer) GetPeersInfo(context.Context, *types.Empty) (*types.TotalNodeInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPeersInfo not implemented")
 }
 
@@ -990,7 +989,7 @@ func _RPCService_SendRawTransactions_Handler(srv interface{}, ctx context.Contex
 }
 
 func _RPCService_GetBlockByHash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(proto.Hash)
+	in := new(types.Hash)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1002,7 +1001,7 @@ func _RPCService_GetBlockByHash_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: "/controller.RPCService/GetBlockByHash",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServiceServer).GetBlockByHash(ctx, req.(*proto.Hash))
+		return srv.(RPCServiceServer).GetBlockByHash(ctx, req.(*types.Hash))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1026,7 +1025,7 @@ func _RPCService_GetBlockByNumber_Handler(srv interface{}, ctx context.Context, 
 }
 
 func _RPCService_GetTransaction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(proto.Hash)
+	in := new(types.Hash)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1038,13 +1037,13 @@ func _RPCService_GetTransaction_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: "/controller.RPCService/GetTransaction",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServiceServer).GetTransaction(ctx, req.(*proto.Hash))
+		return srv.(RPCServiceServer).GetTransaction(ctx, req.(*types.Hash))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RPCService_GetSystemConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(proto.Empty)
+	in := new(types.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1056,13 +1055,13 @@ func _RPCService_GetSystemConfig_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: "/controller.RPCService/GetSystemConfig",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServiceServer).GetSystemConfig(ctx, req.(*proto.Empty))
+		return srv.(RPCServiceServer).GetSystemConfig(ctx, req.(*types.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RPCService_GetVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(proto.Empty)
+	in := new(types.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1074,7 +1073,7 @@ func _RPCService_GetVersion_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: "/controller.RPCService/GetVersion",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServiceServer).GetVersion(ctx, req.(*proto.Empty))
+		return srv.(RPCServiceServer).GetVersion(ctx, req.(*types.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1098,7 +1097,7 @@ func _RPCService_GetBlockHash_Handler(srv interface{}, ctx context.Context, dec 
 }
 
 func _RPCService_GetTransactionBlockNumber_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(proto.Hash)
+	in := new(types.Hash)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1110,13 +1109,13 @@ func _RPCService_GetTransactionBlockNumber_Handler(srv interface{}, ctx context.
 		FullMethod: "/controller.RPCService/GetTransactionBlockNumber",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServiceServer).GetTransactionBlockNumber(ctx, req.(*proto.Hash))
+		return srv.(RPCServiceServer).GetTransactionBlockNumber(ctx, req.(*types.Hash))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RPCService_GetTransactionIndex_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(proto.Hash)
+	in := new(types.Hash)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1128,13 +1127,13 @@ func _RPCService_GetTransactionIndex_Handler(srv interface{}, ctx context.Contex
 		FullMethod: "/controller.RPCService/GetTransactionIndex",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServiceServer).GetTransactionIndex(ctx, req.(*proto.Hash))
+		return srv.(RPCServiceServer).GetTransactionIndex(ctx, req.(*types.Hash))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RPCService_GetPeerCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(proto.Empty)
+	in := new(types.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1146,13 +1145,13 @@ func _RPCService_GetPeerCount_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: "/controller.RPCService/GetPeerCount",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServiceServer).GetPeerCount(ctx, req.(*proto.Empty))
+		return srv.(RPCServiceServer).GetPeerCount(ctx, req.(*types.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RPCService_AddNode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(proto.NodeNetInfo)
+	in := new(types.NodeNetInfo)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1164,13 +1163,13 @@ func _RPCService_AddNode_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: "/controller.RPCService/AddNode",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServiceServer).AddNode(ctx, req.(*proto.NodeNetInfo))
+		return srv.(RPCServiceServer).AddNode(ctx, req.(*types.NodeNetInfo))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RPCService_GetPeersInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(proto.Empty)
+	in := new(types.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1182,7 +1181,7 @@ func _RPCService_GetPeersInfo_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: "/controller.RPCService/GetPeersInfo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServiceServer).GetPeersInfo(ctx, req.(*proto.Empty))
+		return srv.(RPCServiceServer).GetPeersInfo(ctx, req.(*types.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1258,13 +1257,13 @@ var _RPCService_serviceDesc = grpc.ServiceDesc{
 type Consensus2ControllerServiceClient interface {
 	// Consensus request a Proposal to start consensus
 	// ret: proposal
-	GetProposal(ctx context.Context, in *proto.Empty, opts ...grpc.CallOption) (*proto.ProposalResponse, error)
+	GetProposal(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*types.ProposalResponse, error)
 	// when Consensus received a new proposal from other nodes, it will ask controller to check it
 	// args: proposal hash
 	// ret: ok or not
-	CheckProposal(ctx context.Context, in *proto.Proposal, opts ...grpc.CallOption) (*proto.StatusCode, error)
+	CheckProposal(ctx context.Context, in *types.Proposal, opts ...grpc.CallOption) (*types.StatusCode, error)
 	// after Consensus, tell controller a proposal has committed
-	CommitBlock(ctx context.Context, in *proto.ProposalWithProof, opts ...grpc.CallOption) (*proto.ConsensusConfigurationResponse, error)
+	CommitBlock(ctx context.Context, in *types.ProposalWithProof, opts ...grpc.CallOption) (*types.ConsensusConfigurationResponse, error)
 }
 
 type consensus2ControllerServiceClient struct {
@@ -1275,8 +1274,8 @@ func NewConsensus2ControllerServiceClient(cc grpc.ClientConnInterface) Consensus
 	return &consensus2ControllerServiceClient{cc}
 }
 
-func (c *consensus2ControllerServiceClient) GetProposal(ctx context.Context, in *proto.Empty, opts ...grpc.CallOption) (*proto.ProposalResponse, error) {
-	out := new(proto.ProposalResponse)
+func (c *consensus2ControllerServiceClient) GetProposal(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*types.ProposalResponse, error) {
+	out := new(types.ProposalResponse)
 	err := c.cc.Invoke(ctx, "/controller.Consensus2ControllerService/GetProposal", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -1284,8 +1283,8 @@ func (c *consensus2ControllerServiceClient) GetProposal(ctx context.Context, in 
 	return out, nil
 }
 
-func (c *consensus2ControllerServiceClient) CheckProposal(ctx context.Context, in *proto.Proposal, opts ...grpc.CallOption) (*proto.StatusCode, error) {
-	out := new(proto.StatusCode)
+func (c *consensus2ControllerServiceClient) CheckProposal(ctx context.Context, in *types.Proposal, opts ...grpc.CallOption) (*types.StatusCode, error) {
+	out := new(types.StatusCode)
 	err := c.cc.Invoke(ctx, "/controller.Consensus2ControllerService/CheckProposal", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -1293,8 +1292,8 @@ func (c *consensus2ControllerServiceClient) CheckProposal(ctx context.Context, i
 	return out, nil
 }
 
-func (c *consensus2ControllerServiceClient) CommitBlock(ctx context.Context, in *proto.ProposalWithProof, opts ...grpc.CallOption) (*proto.ConsensusConfigurationResponse, error) {
-	out := new(proto.ConsensusConfigurationResponse)
+func (c *consensus2ControllerServiceClient) CommitBlock(ctx context.Context, in *types.ProposalWithProof, opts ...grpc.CallOption) (*types.ConsensusConfigurationResponse, error) {
+	out := new(types.ConsensusConfigurationResponse)
 	err := c.cc.Invoke(ctx, "/controller.Consensus2ControllerService/CommitBlock", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -1306,26 +1305,26 @@ func (c *consensus2ControllerServiceClient) CommitBlock(ctx context.Context, in 
 type Consensus2ControllerServiceServer interface {
 	// Consensus request a Proposal to start consensus
 	// ret: proposal
-	GetProposal(context.Context, *proto.Empty) (*proto.ProposalResponse, error)
+	GetProposal(context.Context, *types.Empty) (*types.ProposalResponse, error)
 	// when Consensus received a new proposal from other nodes, it will ask controller to check it
 	// args: proposal hash
 	// ret: ok or not
-	CheckProposal(context.Context, *proto.Proposal) (*proto.StatusCode, error)
+	CheckProposal(context.Context, *types.Proposal) (*types.StatusCode, error)
 	// after Consensus, tell controller a proposal has committed
-	CommitBlock(context.Context, *proto.ProposalWithProof) (*proto.ConsensusConfigurationResponse, error)
+	CommitBlock(context.Context, *types.ProposalWithProof) (*types.ConsensusConfigurationResponse, error)
 }
 
 // UnimplementedConsensus2ControllerServiceServer can be embedded to have forward compatible implementations.
 type UnimplementedConsensus2ControllerServiceServer struct {
 }
 
-func (*UnimplementedConsensus2ControllerServiceServer) GetProposal(context.Context, *proto.Empty) (*proto.ProposalResponse, error) {
+func (*UnimplementedConsensus2ControllerServiceServer) GetProposal(context.Context, *types.Empty) (*types.ProposalResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProposal not implemented")
 }
-func (*UnimplementedConsensus2ControllerServiceServer) CheckProposal(context.Context, *proto.Proposal) (*proto.StatusCode, error) {
+func (*UnimplementedConsensus2ControllerServiceServer) CheckProposal(context.Context, *types.Proposal) (*types.StatusCode, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckProposal not implemented")
 }
-func (*UnimplementedConsensus2ControllerServiceServer) CommitBlock(context.Context, *proto.ProposalWithProof) (*proto.ConsensusConfigurationResponse, error) {
+func (*UnimplementedConsensus2ControllerServiceServer) CommitBlock(context.Context, *types.ProposalWithProof) (*types.ConsensusConfigurationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CommitBlock not implemented")
 }
 
@@ -1334,7 +1333,7 @@ func RegisterConsensus2ControllerServiceServer(s *grpc.Server, srv Consensus2Con
 }
 
 func _Consensus2ControllerService_GetProposal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(proto.Empty)
+	in := new(types.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1346,13 +1345,13 @@ func _Consensus2ControllerService_GetProposal_Handler(srv interface{}, ctx conte
 		FullMethod: "/controller.Consensus2ControllerService/GetProposal",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(Consensus2ControllerServiceServer).GetProposal(ctx, req.(*proto.Empty))
+		return srv.(Consensus2ControllerServiceServer).GetProposal(ctx, req.(*types.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Consensus2ControllerService_CheckProposal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(proto.Proposal)
+	in := new(types.Proposal)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1364,13 +1363,13 @@ func _Consensus2ControllerService_CheckProposal_Handler(srv interface{}, ctx con
 		FullMethod: "/controller.Consensus2ControllerService/CheckProposal",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(Consensus2ControllerServiceServer).CheckProposal(ctx, req.(*proto.Proposal))
+		return srv.(Consensus2ControllerServiceServer).CheckProposal(ctx, req.(*types.Proposal))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Consensus2ControllerService_CommitBlock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(proto.ProposalWithProof)
+	in := new(types.ProposalWithProof)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1382,7 +1381,7 @@ func _Consensus2ControllerService_CommitBlock_Handler(srv interface{}, ctx conte
 		FullMethod: "/controller.Consensus2ControllerService/CommitBlock",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(Consensus2ControllerServiceServer).CommitBlock(ctx, req.(*proto.ProposalWithProof))
+		return srv.(Consensus2ControllerServiceServer).CommitBlock(ctx, req.(*types.ProposalWithProof))
 	}
 	return interceptor(ctx, in, info, handler)
 }
