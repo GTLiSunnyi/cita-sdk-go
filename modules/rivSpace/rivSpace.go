@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/GTLiSunnyi/cita-sdk-go/types"
+	"github.com/GTLiSunnyi/cita-sdk-go/types/contract"
 )
 
 type rivSpaceClient struct {
@@ -51,6 +52,15 @@ func (client rivSpaceClient) Send(params map[string]interface{}, header types.Gr
 	case err = <-ch:
 		return receipt, err
 	}
+}
+
+func (client rivSpaceClient) SendAndGetEvent(contract *contract.Contract, params map[string]interface{}, header types.GrpcRequestHeader, eventName string, res interface{}) error {
+	receipt, err := client.Send(params, header)
+	if err != nil {
+		return err
+	}
+
+	return contract.GetEvent(receipt, eventName, res)
 }
 
 func (client rivSpaceClient) CreateAccount(name, appId, appSecret string, header types.GrpcRequestHeader) (string, error) {
