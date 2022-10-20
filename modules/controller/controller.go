@@ -77,7 +77,7 @@ func (client controllerClient) GetSystemConfig(header sdktypes.GrpcRequestHeader
 
 // 发送交易
 func (client controllerClient) SendTx(keypair types.KeyPair, req SendRequest, header sdktypes.GrpcRequestHeader) (string, error) {
-	to, err := utils.ParseAddress(req.To)
+	to, err := utils.ParseAddress(req.Contract.Address)
 	if err != nil {
 		return "", err
 	}
@@ -101,10 +101,15 @@ func (client controllerClient) SendTx(keypair types.KeyPair, req SendRequest, he
 	rand.Seed(time.Now().Unix())
 	nonce := strconv.FormatUint(rand.Uint64(), 10)
 
+	data, err := req.Contract.Abi.Pack(req.FuncName, req.Params...)
+	if err != nil {
+		return "", err
+	}
+
 	rawTx := sdktypes.Transaction{
 		Version:         systemConfig.Version,
-		To:              to,
-		Data:            req.Data,
+		To:              to[:],
+		Data:            data,
 		Value:           value,
 		Nonce:           nonce,
 		Quota:           req.Quota,

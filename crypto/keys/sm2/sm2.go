@@ -27,8 +27,10 @@ func NewKeyPair() (types.KeyPair, error) {
 
 	publicKey := &privateKey.PublicKey
 
-	var address types.Address
-	copy(address[:], utils.Sm3Hash(append(publicKey.X.Bytes(), publicKey.Y.Bytes()...))[32-types.AddressSize:])
+	address, err := utils.ParseAddressSlice2Arr(utils.Sm3Hash(append(publicKey.X.Bytes(), publicKey.Y.Bytes()...))[32-types.AddressSize:])
+	if err != nil {
+		return nil, err
+	}
 
 	return SM2KeyPair{
 		KeyType:    types.Sm2Type,
@@ -88,8 +90,10 @@ func ImportKeyPair(str string) (types.KeyPair, error) {
 
 	publicKey := &privateKey.PublicKey
 
-	var address types.Address
-	copy(address[:], utils.Sm3Hash(append(publicKey.X.Bytes(), publicKey.Y.Bytes()...))[32-types.AddressSize:])
+	address, err := utils.ParseAddressSlice2Arr(utils.Sm3Hash(append(publicKey.X.Bytes(), publicKey.Y.Bytes()...))[32-types.AddressSize:])
+	if err != nil {
+		return nil, err
+	}
 
 	return SM2KeyPair{
 		KeyType:    types.Sm2Type,

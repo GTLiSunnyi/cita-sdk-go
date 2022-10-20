@@ -58,8 +58,9 @@ func TestController(t *testing.T) {
 	}
 
 	req := controller.SendRequest{
-		To:   ContractAddress,
-		Data: contract.Abi.Methods[MethodName].ID,
+		Contract: &contract,
+		FuncName: MethodName,
+		Params:   []interface{}{},
 	}
 	hash, err := client.Controller.SendTx(keypair, req, header)
 	if err != nil {

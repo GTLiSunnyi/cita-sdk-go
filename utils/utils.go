@@ -11,16 +11,24 @@ import (
 	"github.com/GTLiSunnyi/cita-sdk-go/crypto/types"
 )
 
-func ParseAddress(str string) ([]byte, error) {
+func ParseAddress(str string) (types.Address, error) {
 	address, err := ParseData(str)
 	if err != nil {
-		return nil, err
+		return types.Address{}, err
 	}
-	if len(address) == types.AddressSize {
-		return address, nil
-	} else {
-		return nil, errors.New("地址长度错误")
+
+	return ParseAddressSlice2Arr(address)
+}
+
+func ParseAddressSlice2Arr(address []byte) (types.Address, error) {
+	if len(address) != types.AddressSize {
+		return types.Address{}, errors.New("地址长度错误")
 	}
+
+	var res types.Address
+	copy(res[:], address)
+
+	return res, nil
 }
 
 func ParseValue(str string) ([]byte, error) {

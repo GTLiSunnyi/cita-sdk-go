@@ -40,8 +40,8 @@ func (client executorClient) Call(header types.GrpcRequestHeader, contract contr
 	}
 
 	callReq := &CallRequest{
-		To:     to,
-		From:   from,
+		To:     to[:],
+		From:   from[:],
 		Method: data,
 		Args:   [][]byte{},
 	}
