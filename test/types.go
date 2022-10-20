@@ -14,7 +14,7 @@ const MethodName = "add"
 const EventName = "Add"
 
 type AddEvent struct {
-	A int
+	A *big.Int
 	B string
 }
 
