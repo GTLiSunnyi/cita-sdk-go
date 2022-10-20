@@ -24,7 +24,7 @@ func NewClient(client *grpc.ClientConn) Client {
 }
 
 // params：填函数的参数，可以传入 big.Int\[]byte\string，例如：[]interface{}{big.NewInt(10), []byte{1}}
-func (client executorClient) Call(header types.GrpcRequestHeader, contract contract.Contract, userAddress string, funcName string, params []interface{}, res interface{}) error {
+func (client executorClient) Call(header types.GrpcRequestHeader, contract *contract.Contract, userAddress string, funcName string, params []interface{}, res interface{}) error {
 	data, err := contract.Abi.Pack(funcName, params...)
 	if err != nil {
 		return err

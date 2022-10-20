@@ -16,19 +16,19 @@ type Contract struct {
 	Address string
 }
 
-func NewContract(address string, abiPath string) (Contract, error) {
+func NewContract(address string, abiPath string) (*Contract, error) {
 	abiFile, err := os.ReadFile(abiPath)
 	if err != nil {
-		return Contract{}, err
+		return nil, err
 	}
 	abiStr := string(abiFile)
 
 	ethAbi, err := abi.JSON(strings.NewReader(abiStr))
 	if err != nil {
-		return Contract{}, err
+		return nil, err
 	}
 
-	return Contract{
+	return &Contract{
 		Abi:     ethAbi,
 		Address: address,
 	}, nil

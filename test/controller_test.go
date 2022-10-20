@@ -58,7 +58,7 @@ func TestController(t *testing.T) {
 	}
 
 	req := controller.SendRequest{
-		Contract: &contract,
+		Contract: contract,
 		FuncName: MethodName,
 		Params:   []interface{}{},
 	}
