@@ -54,13 +54,13 @@ func (client rivSpaceClient) Send(params map[string]interface{}, header types.Gr
 	}
 }
 
-func (client rivSpaceClient) SendAndGetEvent(contract *contract.Contract, params map[string]interface{}, header types.GrpcRequestHeader, eventName string, res interface{}) error {
+func (client rivSpaceClient) SendAndGetEvent(contract *contract.Contract, params map[string]interface{}, header types.GrpcRequestHeader, eventName string, event interface{}) error {
 	receipt, err := client.Send(params, header)
 	if err != nil {
 		return err
 	}
 
-	return contract.GetEvent(receipt, eventName, res)
+	return contract.GetEvent(receipt, eventName, event)
 }
 
 func (client rivSpaceClient) CreateAccount(name, appId, appSecret string, header types.GrpcRequestHeader) (string, error) {

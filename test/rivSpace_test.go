@@ -54,10 +54,10 @@ func TestRivSpace(t *testing.T) {
 		t.Fatal(err.Error())
 	}
 
-	var res = &AddEvent{}
-	err = contract.GetEvent(receipt, EventName, res)
+	var event = &AddEvent{}
+	err = contract.GetEvent(receipt, EventName, event)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
-	t.Log(res)
+	t.Log(event)
 }

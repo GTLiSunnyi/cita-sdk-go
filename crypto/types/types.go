@@ -1,5 +1,7 @@
 package types
 
+import "encoding/hex"
+
 type KeyType string
 
 const (
@@ -8,6 +10,10 @@ const (
 )
 
 type Address [AddressSize]byte
+
+func (a Address) String() string {
+	return hex.EncodeToString(a[:])
+}
 
 type KeyPair interface {
 	GetPrivateKey() string

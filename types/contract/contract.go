@@ -34,7 +34,7 @@ func NewContract(address string, abiPath string) (*Contract, error) {
 	}, nil
 }
 
-func (contract Contract) GetEvent(receipt *types.MyReceipt, eventName string, res interface{}) error {
+func (contract Contract) GetEvent(receipt *types.MyReceipt, eventName string, event interface{}) error {
 	for _, log := range receipt.Logs {
 		if log.Topics[0] != contract.Abi.Events[eventName].ID.String() {
 			continue
@@ -49,7 +49,7 @@ func (contract Contract) GetEvent(receipt *types.MyReceipt, eventName string, re
 			return fmt.Errorf("logBytes 的长度不是32的倍数, length: %d", len(logBytes))
 		}
 
-		err = contract.Abi.Unpack(res, eventName, logBytes)
+		err = contract.Abi.Unpack(event, eventName, logBytes)
 		if err != nil {
 			return err
 		}
