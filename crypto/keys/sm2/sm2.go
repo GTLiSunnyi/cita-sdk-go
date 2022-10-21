@@ -44,8 +44,16 @@ func (keypair SM2KeyPair) GetPrivateKey() string {
 	return "0x" + hex.EncodeToString(keypair.PrivateKey.D.Bytes())
 }
 
+func (keypair SM2KeyPair) GetPrivateKeyBytes() []byte {
+	return keypair.PrivateKey.D.Bytes()
+}
+
 func (keypair SM2KeyPair) GetPublicKey() string {
 	return "0x" + hex.EncodeToString(append(keypair.PublicKey.X.Bytes(), keypair.PublicKey.Y.Bytes()...))
+}
+
+func (keypair SM2KeyPair) GetPublicKeyBytes() []byte {
+	return append(keypair.PublicKey.X.Bytes(), keypair.PublicKey.Y.Bytes()...)
 }
 
 func (keypair SM2KeyPair) GetAddressBytes() types.Address {

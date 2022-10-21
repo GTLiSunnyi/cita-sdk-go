@@ -17,7 +17,9 @@ func (a Address) String() string {
 
 type KeyPair interface {
 	GetPrivateKey() string
+	GetPrivateKeyBytes() []byte
 	GetPublicKey() string
+	GetPublicKeyBytes() []byte
 	GetAddressBytes() Address
 	GetAddressString() string
 	Type() KeyType
