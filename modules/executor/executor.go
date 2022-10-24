@@ -14,12 +14,12 @@ import (
 )
 
 type executorClient struct {
-	client *grpc.ClientConn
+	grpcClient *grpc.ClientConn
 }
 
-func NewClient(client *grpc.ClientConn) Client {
+func NewClient(grpcClient *grpc.ClientConn) Client {
 	return &executorClient{
-		client: client,
+		grpcClient: grpcClient,
 	}
 }
 
@@ -50,7 +50,7 @@ func (client executorClient) Call(header types.GrpcRequestHeader, contract *cont
 	ctx, cancel := types.MakeGrpcRequestCtx(header)
 	defer cancel()
 
-	callRes, err := NewExecutorServiceClient(client.client).Call(ctx, callReq)
+	callRes, err := NewExecutorServiceClient(client.grpcClient).Call(ctx, callReq)
 	if err != nil {
 		//获取错误状态
 		statu, ok := status.FromError(err)

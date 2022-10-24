@@ -19,12 +19,12 @@ import (
 )
 
 type controllerClient struct {
-	client *grpc.ClientConn
+	grpcClient *grpc.ClientConn
 }
 
-func NewClient(client *grpc.ClientConn) Client {
+func NewClient(grpcClient *grpc.ClientConn) Client {
 	return &controllerClient{
-		client: client,
+		grpcClient: grpcClient,
 	}
 }
 
@@ -37,7 +37,7 @@ func (client controllerClient) GetBlockNumber(for_padding bool, header sdktypes.
 
 	flag := &Flag{Flag: for_padding}
 
-	callRes, err := NewRPCServiceClient(client.client).GetBlockNumber(ctx, flag)
+	callRes, err := NewRPCServiceClient(client.grpcClient).GetBlockNumber(ctx, flag)
 	if err != nil {
 		//获取错误状态
 		statu, ok := status.FromError(err)
@@ -59,7 +59,7 @@ func (client controllerClient) GetSystemConfig(header sdktypes.GrpcRequestHeader
 	ctx, cancel := sdktypes.MakeGrpcRequestCtx(header)
 	defer cancel()
 
-	callRes, err := NewRPCServiceClient(client.client).GetSystemConfig(ctx, &sdktypes.Empty{})
+	callRes, err := NewRPCServiceClient(client.grpcClient).GetSystemConfig(ctx, &sdktypes.Empty{})
 	if err != nil {
 		//获取错误状态
 		statu, ok := status.FromError(err)
@@ -175,7 +175,7 @@ func (client controllerClient) sendRaw(tx *sdktypes.RawTransaction, header sdkty
 	ctx, cancel := sdktypes.MakeGrpcRequestCtx(header)
 	defer cancel()
 
-	callRes, err := NewRPCServiceClient(client.client).SendRawTransaction(ctx, tx)
+	callRes, err := NewRPCServiceClient(client.grpcClient).SendRawTransaction(ctx, tx)
 	if err != nil {
 		//获取错误状态
 		statu, ok := status.FromError(err)
@@ -229,7 +229,7 @@ func (client controllerClient) GetTransaction(header sdktypes.GrpcRequestHeader,
 	ctx, cancel := sdktypes.MakeGrpcRequestCtx(header)
 	defer cancel()
 
-	callRes, err := NewRPCServiceClient(client.client).GetTransaction(ctx, &sdktypes.Hash{Hash: tx_hash})
+	callRes, err := NewRPCServiceClient(client.grpcClient).GetTransaction(ctx, &sdktypes.Hash{Hash: tx_hash})
 	if err != nil {
 		//获取错误状态
 		statu, ok := status.FromError(err)
