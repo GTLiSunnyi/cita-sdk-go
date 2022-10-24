@@ -4,10 +4,11 @@
 // 	protoc        v3.19.1
 // source: vm/evm.proto
 
-package types
+package evm
 
 import (
 	context "context"
+	types "github.com/GTLiSunnyi/cita-sdk-go/types"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -525,10 +526,11 @@ var file_vm_evm_proto_rawDesc = []byte{
 	0x72, 0x65, 0x73, 0x73, 0x1a, 0x0a, 0x2e, 0x65, 0x76, 0x6d, 0x2e, 0x4e, 0x6f, 0x6e, 0x63, 0x65,
 	0x12, 0x27, 0x0a, 0x06, 0x47, 0x65, 0x74, 0x41, 0x62, 0x69, 0x12, 0x0f, 0x2e, 0x63, 0x6f, 0x6d,
 	0x6d, 0x6f, 0x6e, 0x2e, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x1a, 0x0c, 0x2e, 0x65, 0x76,
-	0x6d, 0x2e, 0x42, 0x79, 0x74, 0x65, 0x41, 0x62, 0x69, 0x42, 0x29, 0x5a, 0x27, 0x67, 0x69, 0x74,
+	0x6d, 0x2e, 0x42, 0x79, 0x74, 0x65, 0x41, 0x62, 0x69, 0x42, 0x2f, 0x5a, 0x2d, 0x67, 0x69, 0x74,
 	0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x47, 0x54, 0x4c, 0x69, 0x53, 0x75, 0x6e, 0x6e,
-	0x79, 0x69, 0x2f, 0x63, 0x69, 0x74, 0x61, 0x2d, 0x73, 0x64, 0x6b, 0x2d, 0x67, 0x6f, 0x2f, 0x74,
-	0x79, 0x70, 0x65, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x79, 0x69, 0x2f, 0x63, 0x69, 0x74, 0x61, 0x2d, 0x73, 0x64, 0x6b, 0x2d, 0x67, 0x6f, 0x2f, 0x6d,
+	0x6f, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x2f, 0x65, 0x76, 0x6d, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x33,
 }
 
 var (
@@ -545,14 +547,14 @@ func file_vm_evm_proto_rawDescGZIP() []byte {
 
 var file_vm_evm_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_vm_evm_proto_goTypes = []interface{}{
-	(*Receipt)(nil),  // 0: evm.Receipt
-	(*Log)(nil),      // 1: evm.Log
-	(*ByteCode)(nil), // 2: evm.ByteCode
-	(*Balance)(nil),  // 3: evm.Balance
-	(*Nonce)(nil),    // 4: evm.Nonce
-	(*ByteAbi)(nil),  // 5: evm.ByteAbi
-	(*Hash)(nil),     // 6: common.Hash
-	(*Address)(nil),  // 7: common.Address
+	(*Receipt)(nil),       // 0: evm.Receipt
+	(*Log)(nil),           // 1: evm.Log
+	(*ByteCode)(nil),      // 2: evm.ByteCode
+	(*Balance)(nil),       // 3: evm.Balance
+	(*Nonce)(nil),         // 4: evm.Nonce
+	(*ByteAbi)(nil),       // 5: evm.ByteAbi
+	(*types.Hash)(nil),    // 6: common.Hash
+	(*types.Address)(nil), // 7: common.Address
 }
 var file_vm_evm_proto_depIdxs = []int32{
 	1, // 0: evm.Receipt.logs:type_name -> evm.Log
@@ -578,7 +580,6 @@ func file_vm_evm_proto_init() {
 	if File_vm_evm_proto != nil {
 		return
 	}
-	file_common_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_vm_evm_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Receipt); i {
@@ -685,11 +686,11 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type RPCServiceClient interface {
-	GetTransactionReceipt(ctx context.Context, in *Hash, opts ...grpc.CallOption) (*Receipt, error)
-	GetCode(ctx context.Context, in *Address, opts ...grpc.CallOption) (*ByteCode, error)
-	GetBalance(ctx context.Context, in *Address, opts ...grpc.CallOption) (*Balance, error)
-	GetTransactionCount(ctx context.Context, in *Address, opts ...grpc.CallOption) (*Nonce, error)
-	GetAbi(ctx context.Context, in *Address, opts ...grpc.CallOption) (*ByteAbi, error)
+	GetTransactionReceipt(ctx context.Context, in *types.Hash, opts ...grpc.CallOption) (*Receipt, error)
+	GetCode(ctx context.Context, in *types.Address, opts ...grpc.CallOption) (*ByteCode, error)
+	GetBalance(ctx context.Context, in *types.Address, opts ...grpc.CallOption) (*Balance, error)
+	GetTransactionCount(ctx context.Context, in *types.Address, opts ...grpc.CallOption) (*Nonce, error)
+	GetAbi(ctx context.Context, in *types.Address, opts ...grpc.CallOption) (*ByteAbi, error)
 }
 
 type rPCServiceClient struct {
@@ -700,7 +701,7 @@ func NewRPCServiceClient(cc grpc.ClientConnInterface) RPCServiceClient {
 	return &rPCServiceClient{cc}
 }
 
-func (c *rPCServiceClient) GetTransactionReceipt(ctx context.Context, in *Hash, opts ...grpc.CallOption) (*Receipt, error) {
+func (c *rPCServiceClient) GetTransactionReceipt(ctx context.Context, in *types.Hash, opts ...grpc.CallOption) (*Receipt, error) {
 	out := new(Receipt)
 	err := c.cc.Invoke(ctx, "/evm.RPCService/GetTransactionReceipt", in, out, opts...)
 	if err != nil {
@@ -709,7 +710,7 @@ func (c *rPCServiceClient) GetTransactionReceipt(ctx context.Context, in *Hash, 
 	return out, nil
 }
 
-func (c *rPCServiceClient) GetCode(ctx context.Context, in *Address, opts ...grpc.CallOption) (*ByteCode, error) {
+func (c *rPCServiceClient) GetCode(ctx context.Context, in *types.Address, opts ...grpc.CallOption) (*ByteCode, error) {
 	out := new(ByteCode)
 	err := c.cc.Invoke(ctx, "/evm.RPCService/GetCode", in, out, opts...)
 	if err != nil {
@@ -718,7 +719,7 @@ func (c *rPCServiceClient) GetCode(ctx context.Context, in *Address, opts ...grp
 	return out, nil
 }
 
-func (c *rPCServiceClient) GetBalance(ctx context.Context, in *Address, opts ...grpc.CallOption) (*Balance, error) {
+func (c *rPCServiceClient) GetBalance(ctx context.Context, in *types.Address, opts ...grpc.CallOption) (*Balance, error) {
 	out := new(Balance)
 	err := c.cc.Invoke(ctx, "/evm.RPCService/GetBalance", in, out, opts...)
 	if err != nil {
@@ -727,7 +728,7 @@ func (c *rPCServiceClient) GetBalance(ctx context.Context, in *Address, opts ...
 	return out, nil
 }
 
-func (c *rPCServiceClient) GetTransactionCount(ctx context.Context, in *Address, opts ...grpc.CallOption) (*Nonce, error) {
+func (c *rPCServiceClient) GetTransactionCount(ctx context.Context, in *types.Address, opts ...grpc.CallOption) (*Nonce, error) {
 	out := new(Nonce)
 	err := c.cc.Invoke(ctx, "/evm.RPCService/GetTransactionCount", in, out, opts...)
 	if err != nil {
@@ -736,7 +737,7 @@ func (c *rPCServiceClient) GetTransactionCount(ctx context.Context, in *Address,
 	return out, nil
 }
 
-func (c *rPCServiceClient) GetAbi(ctx context.Context, in *Address, opts ...grpc.CallOption) (*ByteAbi, error) {
+func (c *rPCServiceClient) GetAbi(ctx context.Context, in *types.Address, opts ...grpc.CallOption) (*ByteAbi, error) {
 	out := new(ByteAbi)
 	err := c.cc.Invoke(ctx, "/evm.RPCService/GetAbi", in, out, opts...)
 	if err != nil {
@@ -747,30 +748,30 @@ func (c *rPCServiceClient) GetAbi(ctx context.Context, in *Address, opts ...grpc
 
 // RPCServiceServer is the server API for RPCService service.
 type RPCServiceServer interface {
-	GetTransactionReceipt(context.Context, *Hash) (*Receipt, error)
-	GetCode(context.Context, *Address) (*ByteCode, error)
-	GetBalance(context.Context, *Address) (*Balance, error)
-	GetTransactionCount(context.Context, *Address) (*Nonce, error)
-	GetAbi(context.Context, *Address) (*ByteAbi, error)
+	GetTransactionReceipt(context.Context, *types.Hash) (*Receipt, error)
+	GetCode(context.Context, *types.Address) (*ByteCode, error)
+	GetBalance(context.Context, *types.Address) (*Balance, error)
+	GetTransactionCount(context.Context, *types.Address) (*Nonce, error)
+	GetAbi(context.Context, *types.Address) (*ByteAbi, error)
 }
 
 // UnimplementedRPCServiceServer can be embedded to have forward compatible implementations.
 type UnimplementedRPCServiceServer struct {
 }
 
-func (*UnimplementedRPCServiceServer) GetTransactionReceipt(context.Context, *Hash) (*Receipt, error) {
+func (*UnimplementedRPCServiceServer) GetTransactionReceipt(context.Context, *types.Hash) (*Receipt, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionReceipt not implemented")
 }
-func (*UnimplementedRPCServiceServer) GetCode(context.Context, *Address) (*ByteCode, error) {
+func (*UnimplementedRPCServiceServer) GetCode(context.Context, *types.Address) (*ByteCode, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCode not implemented")
 }
-func (*UnimplementedRPCServiceServer) GetBalance(context.Context, *Address) (*Balance, error) {
+func (*UnimplementedRPCServiceServer) GetBalance(context.Context, *types.Address) (*Balance, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBalance not implemented")
 }
-func (*UnimplementedRPCServiceServer) GetTransactionCount(context.Context, *Address) (*Nonce, error) {
+func (*UnimplementedRPCServiceServer) GetTransactionCount(context.Context, *types.Address) (*Nonce, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionCount not implemented")
 }
-func (*UnimplementedRPCServiceServer) GetAbi(context.Context, *Address) (*ByteAbi, error) {
+func (*UnimplementedRPCServiceServer) GetAbi(context.Context, *types.Address) (*ByteAbi, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAbi not implemented")
 }
 
@@ -779,7 +780,7 @@ func RegisterRPCServiceServer(s *grpc.Server, srv RPCServiceServer) {
 }
 
 func _RPCService_GetTransactionReceipt_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Hash)
+	in := new(types.Hash)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -791,13 +792,13 @@ func _RPCService_GetTransactionReceipt_Handler(srv interface{}, ctx context.Cont
 		FullMethod: "/evm.RPCService/GetTransactionReceipt",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServiceServer).GetTransactionReceipt(ctx, req.(*Hash))
+		return srv.(RPCServiceServer).GetTransactionReceipt(ctx, req.(*types.Hash))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RPCService_GetCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Address)
+	in := new(types.Address)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -809,13 +810,13 @@ func _RPCService_GetCode_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: "/evm.RPCService/GetCode",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServiceServer).GetCode(ctx, req.(*Address))
+		return srv.(RPCServiceServer).GetCode(ctx, req.(*types.Address))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RPCService_GetBalance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Address)
+	in := new(types.Address)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -827,13 +828,13 @@ func _RPCService_GetBalance_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: "/evm.RPCService/GetBalance",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServiceServer).GetBalance(ctx, req.(*Address))
+		return srv.(RPCServiceServer).GetBalance(ctx, req.(*types.Address))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RPCService_GetTransactionCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Address)
+	in := new(types.Address)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -845,13 +846,13 @@ func _RPCService_GetTransactionCount_Handler(srv interface{}, ctx context.Contex
 		FullMethod: "/evm.RPCService/GetTransactionCount",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServiceServer).GetTransactionCount(ctx, req.(*Address))
+		return srv.(RPCServiceServer).GetTransactionCount(ctx, req.(*types.Address))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RPCService_GetAbi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Address)
+	in := new(types.Address)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -863,7 +864,7 @@ func _RPCService_GetAbi_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/evm.RPCService/GetAbi",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServiceServer).GetAbi(ctx, req.(*Address))
+		return srv.(RPCServiceServer).GetAbi(ctx, req.(*types.Address))
 	}
 	return interceptor(ctx, in, info, handler)
 }

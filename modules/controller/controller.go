@@ -76,7 +76,7 @@ func (client controllerClient) GetSystemConfig(header sdktypes.GrpcRequestHeader
 }
 
 // 发送交易
-func (client controllerClient) SendTx(keypair types.KeyPair, req SendRequest, header sdktypes.GrpcRequestHeader) (string, error) {
+func (client controllerClient) Send(keypair types.KeyPair, req SendRequest, header sdktypes.GrpcRequestHeader) (string, error) {
 	to, err := utils.ParseAddress(req.Contract.Address)
 	if err != nil {
 		return "", err

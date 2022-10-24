@@ -62,7 +62,7 @@ func TestController(t *testing.T) {
 		FuncName: MethodName,
 		Params:   []interface{}{},
 	}
-	hash, err := client.Controller.SendTx(keypair, req, header)
+	hash, err := client.Controller.Send(keypair, req, header)
 	if err != nil {
 		t.Fatal(err.Error())
 	}

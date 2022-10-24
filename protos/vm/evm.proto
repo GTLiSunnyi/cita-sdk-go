@@ -4,7 +4,7 @@ package evm;
 
 import "common.proto";
 
-option go_package = "github.com/GTLiSunnyi/cita-sdk-go/types";
+option go_package = "github.com/GTLiSunnyi/cita-sdk-go/modules/evm";
 
 message Receipt {
   bytes transaction_hash = 1;
