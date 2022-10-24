@@ -30,7 +30,7 @@ func NewClient(grpcClient *grpc.ClientConn) Client {
 
 // 获取区块高度
 // if set for_padding, get block number of the pending block
-func (client controllerClient) GetBlockNumber(for_padding bool, header sdktypes.GrpcRequestHeader) (uint64, error) {
+func (client controllerClient) GetBlockNumber(header sdktypes.GrpcRequestHeader, for_padding bool) (uint64, error) {
 	// 设置 grpc context
 	ctx, cancel := sdktypes.MakeGrpcRequestCtx(header)
 	defer cancel()
@@ -76,7 +76,7 @@ func (client controllerClient) GetSystemConfig(header sdktypes.GrpcRequestHeader
 }
 
 // 发送交易
-func (client controllerClient) Send(keypair types.KeyPair, req SendRequest, header sdktypes.GrpcRequestHeader) (string, error) {
+func (client controllerClient) Send(header sdktypes.GrpcRequestHeader, keypair types.KeyPair, req SendRequest) (string, error) {
 	to, err := utils.ParseAddress(req.Contract.Address)
 	if err != nil {
 		return "", err
@@ -88,7 +88,7 @@ func (client controllerClient) Send(keypair types.KeyPair, req SendRequest, head
 	if req.Quota == 0 {
 		req.Quota = 200000
 	}
-	validUntilBlock, err := client.getValidUntilBlock(req.ValidUntilBlock, header)
+	validUntilBlock, err := client.getValidUntilBlock(header, req.ValidUntilBlock)
 	if err != nil {
 		return "", err
 	}
@@ -117,7 +117,7 @@ func (client controllerClient) Send(keypair types.KeyPair, req SendRequest, head
 		ChainId:         systemConfig.ChainId,
 	}
 
-	hash, err := client.sendRawTx(&rawTx, keypair, header)
+	hash, err := client.sendRawTx(header, &rawTx, keypair)
 	if err != nil {
 		return "", err
 	}
@@ -125,13 +125,13 @@ func (client controllerClient) Send(keypair types.KeyPair, req SendRequest, head
 	return "0x" + hex.EncodeToString(hash), nil
 }
 
-func (client controllerClient) sendRawTx(rawTx *sdktypes.Transaction, keypair types.KeyPair, header sdktypes.GrpcRequestHeader) ([]byte, error) {
+func (client controllerClient) sendRawTx(header sdktypes.GrpcRequestHeader, rawTx *sdktypes.Transaction, keypair types.KeyPair) ([]byte, error) {
 	tx, err := client.signRawTx(rawTx, keypair)
 	if err != nil {
 		return nil, err
 	}
 
-	return client.sendRaw(tx, header)
+	return client.sendRaw(header, tx)
 }
 
 func (client controllerClient) signRawTx(rawTx *sdktypes.Transaction, keypair types.KeyPair) (*sdktypes.RawTransaction, error) {
@@ -170,7 +170,7 @@ func (client controllerClient) signRawTx(rawTx *sdktypes.Transaction, keypair ty
 	}, nil
 }
 
-func (client controllerClient) sendRaw(tx *sdktypes.RawTransaction, header sdktypes.GrpcRequestHeader) ([]byte, error) {
+func (client controllerClient) sendRaw(header sdktypes.GrpcRequestHeader, tx *sdktypes.RawTransaction) ([]byte, error) {
 	// 设置 grpc context
 	ctx, cancel := sdktypes.MakeGrpcRequestCtx(header)
 	defer cancel()
@@ -191,11 +191,11 @@ func (client controllerClient) sendRaw(tx *sdktypes.RawTransaction, header sdkty
 	return callRes.GetHash(), nil
 }
 
-func (client controllerClient) getValidUntilBlock(validUntilBlock string, header sdktypes.GrpcRequestHeader) (uint64, error) {
+func (client controllerClient) getValidUntilBlock(header sdktypes.GrpcRequestHeader, validUntilBlock string) (uint64, error) {
 	if validUntilBlock == "" {
 		validUntilBlock = "+95"
 	}
-	blockNumber, err := client.GetBlockNumber(false, header)
+	blockNumber, err := client.GetBlockNumber(header, false)
 	if err != nil {
 		return 0, err
 	}

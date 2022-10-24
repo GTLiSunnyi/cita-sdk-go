@@ -4,12 +4,14 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
+	cryptotypes "github.com/GTLiSunnyi/cita-sdk-go/crypto/types"
 	"github.com/GTLiSunnyi/cita-sdk-go/modules/controller"
 	"github.com/GTLiSunnyi/cita-sdk-go/modules/evm"
 	"github.com/GTLiSunnyi/cita-sdk-go/modules/executor"
 	"github.com/GTLiSunnyi/cita-sdk-go/modules/key"
 	"github.com/GTLiSunnyi/cita-sdk-go/modules/rivSpace"
 	sdktypes "github.com/GTLiSunnyi/cita-sdk-go/types"
+	"github.com/GTLiSunnyi/cita-sdk-go/types/contract"
 )
 
 type Client struct {
@@ -48,4 +50,18 @@ func NewClient(cfg sdktypes.ClientConfig) (*Client, error) {
 		Evm:        evm,
 		RivSpace:   rivSpace,
 	}, nil
+}
+
+func (client Client) SendAndGetEvent(header sdktypes.GrpcRequestHeader, keypair cryptotypes.KeyPair, sendReq controller.SendRequest, cont *contract.Contract, eventName string, res interface{}) error {
+	txHash, err := client.Controller.Send(header, keypair, sendReq)
+	if err != nil {
+		return err
+	}
+
+	receipt, err := client.RivSpace.GetReceipt(header, txHash)
+	if err != nil {
+		return err
+	}
+
+	return cont.GetEvent(receipt, eventName, res)
 }

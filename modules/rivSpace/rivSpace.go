@@ -23,8 +23,8 @@ func NewClient(rivSpaceAddress types.RivSpaceAddress) Client {
 	}
 }
 
-func (client rivSpaceClient) Send(params map[string]interface{}, header types.GrpcRequestHeader) (*types.MyReceipt, error) {
-	data, err := SendRivSpaceRequest(params, client.RunAddress, header)
+func (client rivSpaceClient) Send(header types.GrpcRequestHeader, params map[string]interface{}) (*types.MyReceipt, error) {
+	data, err := SendRivSpaceRequest(header, params, client.RunAddress)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func (client rivSpaceClient) Send(params map[string]interface{}, header types.Gr
 	ch := make(chan error, 1)
 	go func() {
 		var err error
-		receipt, err = client.GetReceipt(res.Data.TxHash, header)
+		receipt, err = client.GetReceipt(header, res.Data.TxHash)
 		ch <- err
 	}()
 
@@ -54,8 +54,8 @@ func (client rivSpaceClient) Send(params map[string]interface{}, header types.Gr
 	}
 }
 
-func (client rivSpaceClient) SendAndGetEvent(contract *contract.Contract, params map[string]interface{}, header types.GrpcRequestHeader, eventName string, event interface{}) error {
-	receipt, err := client.Send(params, header)
+func (client rivSpaceClient) SendAndGetEvent(header types.GrpcRequestHeader, contract *contract.Contract, params map[string]interface{}, eventName string, event interface{}) error {
+	receipt, err := client.Send(header, params)
 	if err != nil {
 		return err
 	}
@@ -63,14 +63,14 @@ func (client rivSpaceClient) SendAndGetEvent(contract *contract.Contract, params
 	return contract.GetEvent(receipt, eventName, event)
 }
 
-func (client rivSpaceClient) CreateAccount(name, appId, appSecret string, header types.GrpcRequestHeader) (string, error) {
+func (client rivSpaceClient) CreateAccount(header types.GrpcRequestHeader, name, appId, appSecret string) (string, error) {
 	params := map[string]interface{}{
 		"appUserCode": name,
 		"appId":       appId,
 		"appSecret":   appSecret,
 	}
 
-	data, err := SendRivSpaceRequest(params, client.CreateAccountAddress, header)
+	data, err := SendRivSpaceRequest(header, params, client.CreateAccountAddress)
 	if err != nil {
 		return "", err
 	}
@@ -88,12 +88,12 @@ func (client rivSpaceClient) CreateAccount(name, appId, appSecret string, header
 	return res.Data.Address, nil
 }
 
-func (client rivSpaceClient) GetReceipt(tx_hash string, header types.GrpcRequestHeader) (*types.MyReceipt, error) {
+func (client rivSpaceClient) GetReceipt(header types.GrpcRequestHeader, tx_hash string) (*types.MyReceipt, error) {
 	params := map[string]interface{}{
 		"txHash": tx_hash,
 	}
 
-	data, err := SendRivSpaceRequest(params, client.ReceiptAddress, header)
+	data, err := SendRivSpaceRequest(header, params, client.ReceiptAddress)
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +107,7 @@ func (client rivSpaceClient) GetReceipt(tx_hash string, header types.GrpcRequest
 	// 交易没有上链的话，间隔 继续查询
 	if receiptWrap.Data.TransactionHash == "" {
 		time.Sleep(time.Duration(GetReceiptInterval) * time.Millisecond)
-		return client.GetReceipt(tx_hash, header)
+		return client.GetReceipt(header, tx_hash)
 	}
 
 	if receiptWrap.Data.ErrorMessage != "" {

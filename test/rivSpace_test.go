@@ -28,7 +28,7 @@ func TestRivSpace(t *testing.T) {
 	}
 
 	// 测试创建账户
-	address, err := client.RivSpace.CreateAccount("test", AppId, AppSecret, header)
+	address, err := client.RivSpace.CreateAccount(header, "test", AppId, AppSecret)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -42,7 +42,7 @@ func TestRivSpace(t *testing.T) {
 		"response":        []string{},
 	}
 
-	receipt, err := client.RivSpace.Send(params, header)
+	receipt, err := client.RivSpace.Send(header, params)
 	if err != nil {
 		t.Fatal(err.Error())
 	}

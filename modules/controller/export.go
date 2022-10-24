@@ -6,8 +6,8 @@ import (
 )
 
 type Client interface {
-	GetBlockNumber(for_padding bool, header sdktypes.GrpcRequestHeader) (uint64, error)
+	GetBlockNumber(header sdktypes.GrpcRequestHeader, for_padding bool) (uint64, error)
 	GetSystemConfig(header sdktypes.GrpcRequestHeader) (*SystemConfig, error)
-	Send(keypair types.KeyPair, req SendRequest, header sdktypes.GrpcRequestHeader) (string, error)
+	Send(header sdktypes.GrpcRequestHeader, keypair types.KeyPair, req SendRequest) (string, error)
 	GetTransaction(header sdktypes.GrpcRequestHeader, tx_hash []byte) (*sdktypes.UnverifiedTransaction, error)
 }

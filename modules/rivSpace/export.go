@@ -6,8 +6,8 @@ import (
 )
 
 type Client interface {
-	Send(params map[string]interface{}, header types.GrpcRequestHeader) (*types.MyReceipt, error)
-	SendAndGetEvent(contract *contract.Contract, params map[string]interface{}, header types.GrpcRequestHeader, eventName string, event interface{}) error
-	CreateAccount(name, appId, appSecret string, header types.GrpcRequestHeader) (string, error)
-	GetReceipt(tx_hash string, header types.GrpcRequestHeader) (*types.MyReceipt, error)
+	Send(header types.GrpcRequestHeader, params map[string]interface{}) (*types.MyReceipt, error)
+	SendAndGetEvent(header types.GrpcRequestHeader, contract *contract.Contract, params map[string]interface{}, eventName string, event interface{}) error
+	CreateAccount(header types.GrpcRequestHeader, name, appId, appSecret string) (string, error)
+	GetReceipt(header types.GrpcRequestHeader, tx_hash string) (*types.MyReceipt, error)
 }

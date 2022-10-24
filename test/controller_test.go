@@ -32,7 +32,7 @@ func TestController(t *testing.T) {
 	}
 
 	// 测试获取区块高度
-	blockNumber, err := client.Controller.GetBlockNumber(false, header)
+	blockNumber, err := client.Controller.GetBlockNumber(header, false)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -62,7 +62,7 @@ func TestController(t *testing.T) {
 		FuncName: MethodName,
 		Params:   []interface{}{},
 	}
-	hash, err := client.Controller.Send(keypair, req, header)
+	hash, err := client.Controller.Send(header, keypair, req)
 	if err != nil {
 		t.Fatal(err.Error())
 	}

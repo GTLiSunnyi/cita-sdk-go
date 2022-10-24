@@ -9,7 +9,7 @@ import (
 	"github.com/GTLiSunnyi/cita-sdk-go/types"
 )
 
-func SendRivSpaceRequest(params map[string]interface{}, address string, header types.GrpcRequestHeader) ([]byte, error) {
+func SendRivSpaceRequest(header types.GrpcRequestHeader, params map[string]interface{}, address string) ([]byte, error) {
 	b1, err := json.Marshal(&params)
 	if err != nil {
 		return nil, err
