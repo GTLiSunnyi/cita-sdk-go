@@ -48,6 +48,10 @@ func (keypair SM2KeyPair) GetPrivateKeyBytes() []byte {
 	return keypair.PrivateKey.D.Bytes()
 }
 
+func (keypair SM2KeyPair) GetPrivateKeyBigint() *big.Int {
+	return keypair.PrivateKey.D
+}
+
 func (keypair SM2KeyPair) GetPublicKey() string {
 	return "0x" + hex.EncodeToString(append(keypair.PublicKey.X.Bytes(), keypair.PublicKey.Y.Bytes()...))
 }

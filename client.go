@@ -52,7 +52,7 @@ func NewClient(cfg sdktypes.ClientConfig) (*Client, error) {
 	}, nil
 }
 
-func (client Client) SendAndGetEvent(header sdktypes.GrpcRequestHeader, keypair cryptotypes.KeyPair, sendReq controller.SendRequest, cont *contract.Contract, eventName string, res interface{}) error {
+func (client Client) SendAndGetEvent(header sdktypes.GrpcRequestHeader, keypair cryptotypes.KeyPair, sendReq controller.SendRequest, cont *contract.Contract, eventName string, event interface{}) error {
 	txHash, err := client.Controller.Send(header, keypair, sendReq)
 	if err != nil {
 		return err
@@ -63,5 +63,5 @@ func (client Client) SendAndGetEvent(header sdktypes.GrpcRequestHeader, keypair 
 		return err
 	}
 
-	return cont.GetEvent(receipt, eventName, res)
+	return cont.GetEvent(receipt, eventName, event)
 }
