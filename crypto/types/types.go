@@ -1,6 +1,9 @@
 package types
 
-import "encoding/hex"
+import (
+	"encoding/hex"
+	"math/big"
+)
 
 type KeyType string
 
@@ -18,6 +21,7 @@ func (a Address) String() string {
 type KeyPair interface {
 	GetPrivateKey() string
 	GetPrivateKeyBytes() []byte
+	GetPrivateKeyBigint() *big.Int
 	GetPublicKey() string
 	GetPublicKeyBytes() []byte
 	GetAddressBytes() Address
